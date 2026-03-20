@@ -1,7 +1,6 @@
-import Image from "next/image";
 
 export default function Home() {
   return (
-    <div>Hello word</div>
+    <div className="bg-amber-400">Hello word</div>
   );
 }
