@@ -66,12 +66,31 @@ body {
 .input-container:focus-within label {
   color: #f59e0b;
 }
-.effect-shadow {
-  position: absolute;
-  background-color: #f59e0b;
-  box-shadow: 0px -50px 1000px 70px #f59e0b;
-  border-radius: 100%;
-  z-index: -999;
+@layer utilities {
+  .before-dot::before {
+    content: '';
+    position: absolute;
+    top: 10;
+    left: 10;
+    width: 8px;
+    height: 8px;
+    background-color: #f59e0b;
+    border-radius: 9999px;
+    box-shadow: 0px -50px 100px 70px #f59e0b;
+    z-index: -999;
+  }
+   .before-dot::after {
+    content: '';
+    position: absolute;
+    bottom: 10;
+    right: 10;
+    width: 8px;
+    height: 8px;
+    background-color: #f59e0b;
+    border-radius: 9999px;
+    box-shadow: 0px -50px 100px 70px #f59e0b;
+    z-index: -999;
+  }
 }
 .select-closed{
   height: 0px;

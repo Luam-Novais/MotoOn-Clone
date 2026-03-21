@@ -9,9 +9,8 @@ export default function Page(){
 
 
     return (
-      <div className="relative backdrop-blur-2xl">
-        <span className="absolute w-0 h-0 effect-shadow -z-10"></span>
-        <div className="bg-darkgray py-10 px-4 rounded-md shadow-xl shadow-black/50 flex flex-col gap-20 z-50 ">
+      <div className="z-50 relative before-dot after-dot backdrop-blur-2xl ">
+        <div className="relative bg-darkgray py-10 px-4 rounded-md shadow-xl shadow-black/50 flex flex-col gap-20">
           <span className="flex flex-col gap-4">
             <Title>Entrar</Title>
             <p className="text-gray-300 text-sm">Entre com suas credenciais para acesso total a plataforma.</p>
@@ -24,7 +23,6 @@ export default function Page(){
             <Button loadingState={loading}>Entrar</Button>
           </form>
         </div>
-        <span className="absolute w-0 h-0 effect-shadow-bottom effect-shadow bottom-0 right-0"></span>
       </div>
     );  
 }
