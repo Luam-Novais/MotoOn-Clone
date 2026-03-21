@@ -2,6 +2,7 @@
 import { Button } from "@/src/components/button";
 import { Select, Input } from "@/src/components/input";
 import { Title } from "@/src/components/title";
+import {Motorbike} from 'lucide-react'
 import { useState } from "react";
 import {useForm, type SubmitHandler, Controller} from 'react-hook-form'
 
@@ -17,11 +18,12 @@ export default function Page(){
     }
    return (
      <div className="py-6 px-4 flex flex-col gap-4">
-       <span>
-         <Title>Para onde vamos?</Title>
-         <p className="text-[#bbb]">Criar Corrida</p>
-       </span>
-       <form className="bg-[#191919] py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
+       <Title>Para onde Vamos ?</Title>
+       <p className="text-[#ddd]">
+         Nos diga para onde deseja ir, que levaremos você. 
+       </p>
+
+       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
          <Input label="Nome" type="text" />
          <Input label="Telefone" type="text" />
          <Controller
@@ -39,8 +41,10 @@ export default function Page(){
            }}
          />
          <Input label="Ponto de referência" type="text" />
-           <Input label='Data da corrida' type='date'/>
-           <span className="flex justify-between text-xl"><p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p></span>
+         <Input label="Data da corrida" type="date" />
+         <span className="flex justify-between text-xl">
+           <p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p>
+         </span>
          <Button loadingState={loading}>Criar Corrida</Button>
        </form>
      </div>

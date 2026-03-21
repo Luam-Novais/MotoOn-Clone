@@ -6,9 +6,9 @@ interface InputProps {
 }
 export function Input({ label, type }: InputProps) {
   return (
-    <span className="input-container min-w-full rounded-md shadow-md shadow-black/40">
+    <span className="min-w-full rounded-md shadow-md shadow-black/40 flex flex-col gap-2 ">
       <label htmlFor="">{label}</label>
-      <input type={type} className="rounded-md" />
+      <input type={type} className="rounded-md w-full border border-black shadow-md p-3 bg-input" />
     </span>
   );
 }
@@ -18,11 +18,11 @@ export function InputPassword({ label, type }: InputProps) {
     setIsVisible((prev) => !prev);
   }
   return (
-    <span className="input-container min-w-full rounded-md shadow-md shadow-black/40">
+    <span className="min-w-full rounded-md shadow-md shadow-black/40">
       <label htmlFor="">{label}</label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="rounded-md" />
-        <button type="button" className="absolute right-2 top-3" onClick={handleVisibilityButton}>
+        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border border-black shadow-md p-3 bg-input" />
+        <button type="button" className="absolute right-2 top-0" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
       </span>
@@ -74,7 +74,7 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
     <div className="flex flex-col gap-2 min-w-full" ref={containerRef}>
       <label className='text-sm' htmlFor={id}>{label}</label>
 
-      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-input px-2 border-2 rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
+      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-input p-2 border-2 rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
         <button id={id} type="button" onClick={toggle} className={`p-2 flex justify-between w-full ${isOpen ? 'border-b-2 border-[#333]' : ''} `}>
           <span>{value ?? 'Escolher'}</span>
           <span>{isOpen ? <ChevronUp /> : <ChevronDown />}</span>

@@ -10,7 +10,7 @@ export default function Page(){
 
     return (
       <div className="z-50 relative before-dot after-dot backdrop-blur-2xl ">
-        <div className="relative bg-darkgray py-10 px-4 rounded-md shadow-xl shadow-black/50 flex flex-col gap-20">
+        <div className="relative bg-container py-10 px-4 rounded-md shadow-xl shadow-black/50 flex flex-col gap-20">
           <span className="flex flex-col gap-4">
             <Title>Entrar</Title>
             <p className="text-gray-300 text-sm">Entre com suas credenciais para acesso total a plataforma.</p>

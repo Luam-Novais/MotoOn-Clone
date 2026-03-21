@@ -20,50 +20,21 @@
 }
 
 body {
-  background: #111;
+  background: #131313;
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
 }
-.bg-darkgray {
-  background-color: #161616;
+.bg-container {
+  background-color: #212121;
 }
 .bg-input {
   background-color: #121212;
 }
-
-.input-container {
-  border: 1.5px solid #010101;
-  width: 100%;
-  height: 50px;
-  position: relative;
-  display: flex;
-  background-color: #121212;
-  flex-direction: column;
-  transition: all .4s ease-in-out;
-  label {
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    font-size: 0.75rem;
-    background-color: #191919;
-    padding-inline: 4px;
-    color: #eee;
-  }
-  input {
-    width: 100%;
-    height: 100%;
-    font-size: 16px;
-    padding: 8px 4px;
-  }
-  input:focus{
-    outline: none;
-  }
-}
- .input-container:focus-within {
+input:focus{
   border: 1.5px solid #f59e0b;
+  outline: 1px solid #f59e0b;
 }
-
-.input-container:focus-within label {
+focus-within label {
   color: #f59e0b;
 }
 @layer utilities {
@@ -90,6 +61,17 @@ body {
     border-radius: 9999px;
     box-shadow: 0px -50px 100px 70px #f59e0b;
     z-index: -999;
+  }
+   .before-badge::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: -5px;
+    width: 16px;
+    height: 16px;
+    background-color: #f59e0b;
+    border-radius: 4px;
+    z-index: -99;
   }
 }
 .select-closed{
