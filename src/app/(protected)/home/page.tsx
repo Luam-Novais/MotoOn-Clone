@@ -2,6 +2,7 @@ import { Title } from '@/src/components/title';
 import { CardRidesToday, ContainerCard } from '@/src/components/cards';
 import { RideWithClient } from '@/src/types/ride';
 export default function Page() {
+  const totalCorridasPendentes = 1
   return (
     <section className="p-4 flex flex-col gap-4">
       <Title>Olá Arthur.</Title>
@@ -10,15 +11,19 @@ export default function Page() {
           <p className="text-sm">Total de corridas hoje.</p>
           <p className="text-2xl text-amber-500 self-end p-2">3</p>
         </ContainerCard>
-        <ContainerCard style={'min-h-30 grid'}>
+        <ContainerCard style={'min-h-30 grid relative'}>
+          {totalCorridasPendentes > 0 && (
+            <span className="absolute -top-1 -right-1 flex size-3">
+              <span className="absolute inline-flex h-full  w-full  animate-ping rounded-full bg-amber-500 opacity-100"></span>
+              <span className="inline-flex size-3 rounded-full bg-amber-500"></span>
+            </span>
+          )}
           <p className="text-sm"> Corridas aguardando sua confimação.</p>
-          <p className="text-2xl text-amber-500 self-end p-2">0</p>
+          <p className="text-2xl text-amber-500 self-end p-2">{totalCorridasPendentes}</p>
         </ContainerCard>
       </div>
       <div>
-      <CardRidesToday rides={rides} >
-
-      </CardRidesToday>
+        <CardRidesToday rides={rides}></CardRidesToday>
       </div>
     </section>
   );
@@ -46,7 +51,7 @@ const rides = [
     },
   },
   {
-    id: 2,
+    id: 3,
     client_id: 1,
     origin: 'freitas/proximidades',
     destination: 'quatis centro',

@@ -3,11 +3,7 @@ import { RideWithClient } from "../types/ride"
 import { formatToCurrency, minutesToHoursFormated } from "../utils/functionsFomat";
 
 export function ContainerCard({children, style }: {children: React.ReactNode, style?: string}){
-    return(
-        <div className={`bg-container p-2 rounded-md shadow-md shadow-black/0 border-l-2 border-amber-500 ${style}`}>
-            {children}
-        </div>
-    )
+    return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/0 border-l-2 border-amber-500 ${style}`}>{children}</div>;
 }
 
 export function CardRidesToday({ rides }: { rides: RideWithClient[] }) {
@@ -17,7 +13,7 @@ export function CardRidesToday({ rides }: { rides: RideWithClient[] }) {
     <ul className="flex flex-col gap-5">
         {rides.map((ride) =>{
             return (
-              <li className="flex flex-col gap-8 bg-input p-4 rounded-md shadow-md shadow-black/50">
+              <li key={ride.id} className="flex flex-col gap-8 bg-input p-4 rounded-md shadow-md shadow-black/50">
                 <span className="flex justify-between">
                   <p className="text-xl">{ride.client.name}</p>
                   <p className="text-xl">{ride.client.phone}</p>
