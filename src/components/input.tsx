@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { EyeClosed, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { UseFormRegisterReturn } from 'react-hook-form';
+import { register } from 'module';
 interface InputProps {
   label: string;
   type: string;
+  register: UseFormRegisterReturn;
 }
-export function Input({ label, type }: InputProps) {
+export function Input({ label, type, register }: InputProps) {
   return (
-    <span className="min-w-full rounded-md shadow-md shadow-black/40 flex flex-col gap-2 ">
+    <span className="min-w-full flex flex-col gap-2 ">
       <label htmlFor="">{label}</label>
-      <input type={type} className="rounded-md w-full border border-black shadow-md p-3 bg-input" />
+      <input type={type} {...register} className="rounded-md w-full border border-black shadow-md p-3 bg-dark" />
     </span>
   );
 }
@@ -18,10 +21,10 @@ export function InputPassword({ label, type }: InputProps) {
     setIsVisible((prev) => !prev);
   }
   return (
-    <span className="min-w-full rounded-md shadow-md shadow-black/40">
+    <span className="min-w-full">
       <label htmlFor="">{label}</label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border border-black shadow-md p-3 bg-input" />
+        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border border-black shadow-md p-3 bg-dark" />
         <button type="button" className="absolute right-2 top-0" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
@@ -72,9 +75,11 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
 
   return (
     <div className="flex flex-col gap-2 min-w-full" ref={containerRef}>
-      <label className='text-sm' htmlFor={id}>{label}</label>
+      <label className="text-sm" htmlFor={id}>
+        {label}
+      </label>
 
-      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-input p-2 border-2 rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
+      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-dark p-2 border-2 rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
         <button id={id} type="button" onClick={toggle} className={`p-2 flex justify-between w-full ${isOpen ? 'border-b-2 border-[#333]' : ''} `}>
           <span>{value ?? 'Escolher'}</span>
           <span>{isOpen ? <ChevronUp /> : <ChevronDown />}</span>
@@ -95,5 +100,69 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
         )}
       </div>
     </div>
+  );
+}
+
+interface RideSheduleSelectorProps {
+  allShedules: SheduleDTO[];
+  register: UseFormRegisterReturn;
+}
+interface SheduleDTO {
+  slot: number;
+  isAvailable: boolean;
+  formatedShedule: string;
+}
+
+export function RideSheduleSelector({ allShedules, register }: RideSheduleSelectorProps) {
+  const [morningPeriod, afterPeriod] = allShedules.reduce<SheduleDTO[][]>(
+    (acc, s) => {
+      if (s.slot < 720) acc[0].push(s);
+      else acc[1].push(s);
+      return acc;
+    },
+    [[], []],
+  );
+  const [morningOpen, setMorningOpen] = useState<boolean>(false);
+  const [afterOpen, setAfterOpen] = useState<boolean>(false);
+  return (
+    <div className="flex flex-col gap-6 min-h-full h-full">
+      <ContainerShedules register={register} shedules={morningPeriod} label="Manhã" handleClick={() => setMorningOpen((prev) => !prev)} isOpen={morningOpen} />
+      <ContainerShedules register={register} shedules={afterPeriod} label="Tarde" handleClick={() => setAfterOpen((prev) => !prev)} isOpen={afterOpen} />
+    </div>
+  );
+}
+
+interface ContainerShedulesProps {
+  shedules: SheduleDTO[];
+  label: string;
+  handleClick: () => void;
+  isOpen: boolean;
+  register: UseFormRegisterReturn;
+}
+export function ContainerShedules({ shedules, label, handleClick, isOpen, register }: ContainerShedulesProps) {
+  return (
+    <div className={`bg-dark border border-black rounded-md shadow-black/50 shadow-md ${isOpen ? 'h-full' : ''} h-full flex flex-col gap-3 p-5`}>
+      <button className=" min-w-full mb-4 flex justify-between items-center" onClick={handleClick} type="button">
+        {label}
+        {isOpen ? <ChevronUp /> : <ChevronDown />}
+      </button>
+
+      <ul className={`relative max-w-full w-full  ${isOpen ? 'block' : 'hidden'} flex flex-wrap justify-between items-center gap-8 gap-y-12`}>
+        {shedules.map((s) => {
+          return <li>{<CardShedule key={s.slot} shedule={s} register={register} />}</li>;
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function CardShedule({ shedule, register }: { shedule: SheduleDTO; register: UseFormRegisterReturn }) {
+  return (
+    <span className="relative p-4 border border-transparent has-[input:checked]:border-amber-500 has-[input:checked]:text-amber-500 bg-container rounded-md shadow-md shadow-black">
+      <label className="has-[input:checked]:text-amber-500" htmlFor={shedule.slot.toString()}>
+        {shedule.formatedShedule}
+      </label>
+      <input type="radio" value={shedule.formatedShedule} {...register} id={shedule.slot.toString()} className="absolute inset-0 min-w-full min-h-full opacity-0" />
+    </span>
   );
 }

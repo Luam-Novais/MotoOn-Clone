@@ -4,7 +4,7 @@ export default function Home() {
     <div className="flex flex-col gap-20">
       <Link href={'/login'}>Login</Link>
       <Link href={'/create-ride'}>Criar corrida</Link>
-      <Link href={'/home'}>Criar corrida</Link>
+      <Link href={'/home'}>Home</Link>
     </div>
   );
 }

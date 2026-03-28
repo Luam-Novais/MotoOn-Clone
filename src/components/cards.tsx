@@ -1,6 +1,6 @@
 import { console } from "inspector";
 import { RideWithClient } from "../types/ride"
-import { formatToCurrency, minutesToHoursFormated } from "../utils/functionsFomat";
+import { formatToCurrency, minutesToHoursFormated } from "../utils/functionsFormat.js";
 
 export function ContainerCard({children, style }: {children: React.ReactNode, style?: string}){
     return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/0 border-l-2 border-amber-500 ${style}`}>{children}</div>;

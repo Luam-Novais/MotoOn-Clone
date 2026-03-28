@@ -27,16 +27,14 @@ body {
 .bg-container {
   background-color: #212121;
 }
-.bg-input {
+.bg-dark {
   background-color: #121212;
 }
 input:focus{
   border: 1.5px solid #f59e0b;
   outline: 1px solid #f59e0b;
 }
-focus-within label {
-  color: #f59e0b;
-}
+
 @layer utilities {
   .before-dot::before {
     content: '';
