@@ -18,6 +18,9 @@
     --foreground: #ededed;
   }
 }
+*{
+  box-sizing: border-box;
+}
 
 body {
   background: #131313;
