@@ -52,10 +52,10 @@ export default function Page() {
   }
 
   return (
-    <div className="py-6 px-4 flex flex-col gap-4 bg-gray-300">
-      <Title className='text-[#090909] font-bold'>Para onde Vamos ?</Title>
-      <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
-      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10 overflow-x-hidden" onSubmit={handleSubmit(onSubimit)} action="">
+    <div className="py-6 px-4 flex flex-col gap-4">
+      <Title>Para onde Vamos ?</Title>
+      <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
+      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
           <div className="flex flex-col gap-10">
             <Input label="Nome" type="text" register={register('name')} />
