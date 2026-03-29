@@ -23,6 +23,7 @@ interface SheduleDTO {
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [countForm, setCountForm] = useState<1 | 2>(1);
   const { control, register, handleSubmit, watch } = useForm<CreateRideDTO>();
   const date = watch('date_ride');
   
@@ -53,7 +54,6 @@ export default function Page() {
     <div className="py-6 px-4 flex flex-col gap-4">
       <Title>Para onde Vamos ?</Title>
       <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
-
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
         {countForm === 1 && (
           <div className="flex flex-col gap-10">
