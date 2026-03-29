@@ -21,7 +21,7 @@ export default function Page() {
             <Input label="Nome de usuário" type="text" register={register('username')} />
             <InputPassword label="Senha" type="password" register={register('password')} />
           </div>
-          <Button loadingState={loading}>Entrar</Button>
+          <Button type='submit' loadingState={loading}>Entrar</Button>
         </form>
       </div>
     </div>
