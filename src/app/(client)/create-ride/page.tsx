@@ -23,10 +23,10 @@ interface SheduleDTO {
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [countForm, setCountForm] = useState<1 | 2>(1);
+  const [countFormPage, setCountFormPage] = useState<1 | 2>(1);
   const { control, register, handleSubmit, watch } = useForm<CreateRideDTO>();
   const date = watch('date_ride');
-  
+
   // const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
   // useEffect(() => {
   //   if(date){
@@ -41,21 +41,21 @@ export default function Page() {
   //   }
   // }, [date]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
-   console.log(data)
+    console.log(data);
   };
-  function nextForm(){
-    setCountForm(2)
+  function nextForm() {
+    setCountFormPage(2);
   }
-   function prevForm() {
-     setCountForm(1);
-   }
+  function prevForm() {
+    setCountFormPage(1);
+  }
 
   return (
     <div className="py-6 px-4 flex flex-col gap-4">
       <Title>Para onde Vamos ?</Title>
       <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
-        {countForm === 1 && (
+        {countFormPage === 1 && (
           <div className="flex flex-col gap-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
@@ -63,11 +63,11 @@ export default function Page() {
             {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
             <Button type="button" onClick={nextForm}>
               Adicionar endereços
-              <ArrowRight/>
+              <ArrowRight />
             </Button>
           </div>
         )}
-        {countForm === 2 && (
+        {countFormPage === 2 && (
           <div className="flex flex-col gap-10">
             <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
               <ArrowLeft />
@@ -77,7 +77,7 @@ export default function Page() {
               name="origin"
               control={control}
               render={({ field }) => {
-                return <Select data={data} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin"/>;
+                return <Select data={data} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
               }}
             />
             <Controller

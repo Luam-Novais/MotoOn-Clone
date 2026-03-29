@@ -143,7 +143,7 @@ export function ContainerShedules({ shedules, label, handleClick, isOpen, regist
 
       <ul className={`relative max-w-full w-full  ${isOpen ? 'block' : 'hidden'} flex flex-wrap  items-center pb-5 gap-6 gap-y-12`}>
         {shedules.map((s) => {
-          return <li>{<CardShedule key={s.slot} shedule={s} register={register} />}</li>;
+          return <li key={s.slot}>{<CardShedule shedule={s} register={register} />}</li>;
         })}
       </ul>
     </div>
