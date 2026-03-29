@@ -12,7 +12,7 @@ export function Input({ label, type, register }: InputProps) {
   return (
     <span className="min-w-full flex flex-col gap-2 ">
       <label htmlFor="">{label}</label>
-      <input type={type} {...register} className="rounded-md w-full border border-black shadow-md p-3 bg-dark" />
+      <input type={type} {...register} className="rounded-md w-full border-2 border-black shadow-md p-3 bg-dark" />
     </span>
   );
 }
@@ -25,7 +25,7 @@ export function InputPassword({ label, type }: InputProps) {
     <span className="min-w-full">
       <label htmlFor="">{label}</label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border border-black shadow-md p-3 bg-dark" />
+        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border-2 border-black shadow-md p-3 bg-dark" />
         <button type="button" className="absolute right-2 top-0" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>

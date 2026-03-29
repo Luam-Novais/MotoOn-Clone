@@ -3,6 +3,7 @@ import { Button } from '@/src/components/button';
 import { Select, Input, RideSheduleSelector } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
+import { Motorbike } from 'lucide-react';
 import { useForm, type SubmitHandler, Controller, Watch } from 'react-hook-form';
 
 interface CreateRideDTO {
@@ -70,7 +71,9 @@ export default function Page() {
         <span className="flex justify-between text-xl">
           <p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p>
         </span>
-        <Button loadingState={loading}>Criar Corrida</Button>
+        <Button loadingState={loading}>
+          Criar Corrida <Motorbike />
+        </Button>
       </form>
     </div>
   );
