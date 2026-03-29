@@ -42,7 +42,7 @@ export default function Page() {
   // }, [date]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
     console.log(data);
-    alert('Corrida criada com sucesso, aguarde a confirmação do motoboy.')
+    alert('Corrida criada com sucesso, aguarde a confirmação do motoboy.');
   };
   function nextForm() {
     setCountFormPage(2);
@@ -52,12 +52,12 @@ export default function Page() {
   }
 
   return (
-    <div className="py-6 px-4 flex flex-col gap-4">
-      <Title>Para onde Vamos ?</Title>
-      <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
-      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
+    <div className="py-6 px-4 flex flex-col gap-4 bg-gray-300">
+      <Title className="text-[#090909] font-bold">Para onde Vamos ?</Title>
+      <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
+      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-y-10 overflow-x-hidden" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-y-10 overflow-hidden">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
             <Input label="Data da corrida" type="date" register={register('date_ride')} />
@@ -69,7 +69,7 @@ export default function Page() {
           </div>
         )}
         {countFormPage === 2 && (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-y-10 overflow-x-hidden">
             <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
               <ArrowLeft />
               alterar dados iniciais
