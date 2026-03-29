@@ -26,7 +26,7 @@ export default function Page() {
   const date = watch('date_ride');
   const time = watch('time');
 
-  const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
+  // const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
   // useEffect(() => {
   //   if(date){
   //     async function getSlots() {
@@ -49,7 +49,7 @@ export default function Page() {
 
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
         <Input label="Data da corrida" type="date" register={register('date_ride')} />
-        {date && slots && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
+        {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
         <Input label="Nome" type="text" register={register('name')} />
         <Input label="Telefone" type="text" register={register('phone')} />
         <Controller
@@ -81,7 +81,7 @@ const data = ['freitas', 'centro', 'pq_mariana'];
 const slotsTeste = [
   {
     slot: 300,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '05:00',
   },
   {
@@ -91,7 +91,7 @@ const slotsTeste = [
   },
   {
     slot: 360,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '06:00',
   },
   {
@@ -136,7 +136,7 @@ const slotsTeste = [
   },
   {
     slot: 630,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '10:30',
   },
   {
@@ -166,7 +166,7 @@ const slotsTeste = [
   },
   {
     slot: 810,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '13:30',
   },
   {
@@ -181,7 +181,7 @@ const slotsTeste = [
   },
   {
     slot: 900,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '15:00',
   },
   {
@@ -196,7 +196,7 @@ const slotsTeste = [
   },
   {
     slot: 990,
-    isAvailable: true,
+    isAvailable: false,
     formatedShedule: '16:30',
   },
   {

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { EyeClosed, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { register } from 'module';
+import { CardShedule } from './cards';
+import { SheduleDTO, RideSheduleSelectorProps } from '../types/ride';
 interface InputProps {
   label: string;
   type: string;
@@ -103,16 +104,6 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
   );
 }
 
-interface RideSheduleSelectorProps {
-  allShedules: SheduleDTO[];
-  register: UseFormRegisterReturn;
-}
-interface SheduleDTO {
-  slot: number;
-  isAvailable: boolean;
-  formatedShedule: string;
-}
-
 export function RideSheduleSelector({ allShedules, register }: RideSheduleSelectorProps) {
   const [morningPeriod, afterPeriod] = allShedules.reduce<SheduleDTO[][]>(
     (acc, s) => {
@@ -125,9 +116,12 @@ export function RideSheduleSelector({ allShedules, register }: RideSheduleSelect
   const [morningOpen, setMorningOpen] = useState<boolean>(false);
   const [afterOpen, setAfterOpen] = useState<boolean>(false);
   return (
-    <div className="flex flex-col gap-6 min-h-full h-full">
-      <ContainerShedules register={register} shedules={morningPeriod} label="Manhã" handleClick={() => setMorningOpen((prev) => !prev)} isOpen={morningOpen} />
-      <ContainerShedules register={register} shedules={afterPeriod} label="Tarde" handleClick={() => setAfterOpen((prev) => !prev)} isOpen={afterOpen} />
+    <div className="flex flex-col gap-3">
+      <h1>Horário da corrida</h1>
+      <div className="flex flex-col gap-6 min-h-full h-full">
+        <ContainerShedules register={register} shedules={morningPeriod} label="Manhã" handleClick={() => setMorningOpen((prev) => !prev)} isOpen={morningOpen} />
+        <ContainerShedules register={register} shedules={afterPeriod} label="Tarde" handleClick={() => setAfterOpen((prev) => !prev)} isOpen={afterOpen} />
+      </div>
     </div>
   );
 }
@@ -141,28 +135,17 @@ interface ContainerShedulesProps {
 }
 export function ContainerShedules({ shedules, label, handleClick, isOpen, register }: ContainerShedulesProps) {
   return (
-    <div className={`bg-dark border border-black rounded-md shadow-black/50 shadow-md ${isOpen ? 'h-full' : ''} h-full flex flex-col gap-3 p-5`}>
-      <button className=" min-w-full mb-4 flex justify-between items-center" onClick={handleClick} type="button">
+    <div className={`bg-dark border border-black rounded-md shadow-black/50 shadow-md  p-5 ${isOpen ? 'h-full' : ''} flex flex-col gap-4`}>
+      <button className={`min-w-full flex justify-between items-center  ${isOpen ? 'mb-4' : ''}`} onClick={handleClick} type="button">
         {label}
         {isOpen ? <ChevronUp /> : <ChevronDown />}
       </button>
 
-      <ul className={`relative max-w-full w-full  ${isOpen ? 'block' : 'hidden'} flex flex-wrap justify-between items-center gap-8 gap-y-12`}>
+      <ul className={`relative max-w-full w-full  ${isOpen ? 'block' : 'hidden'} flex flex-wrap  items-center pb-5 gap-6 gap-y-12`}>
         {shedules.map((s) => {
           return <li>{<CardShedule key={s.slot} shedule={s} register={register} />}</li>;
         })}
       </ul>
     </div>
-  );
-}
-
-function CardShedule({ shedule, register }: { shedule: SheduleDTO; register: UseFormRegisterReturn }) {
-  return (
-    <span className="relative p-4 border border-transparent has-[input:checked]:border-amber-500 has-[input:checked]:text-amber-500 bg-container rounded-md shadow-md shadow-black">
-      <label className="has-[input:checked]:text-amber-500" htmlFor={shedule.slot.toString()}>
-        {shedule.formatedShedule}
-      </label>
-      <input type="radio" value={shedule.formatedShedule} {...register} id={shedule.slot.toString()} className="absolute inset-0 min-w-full min-h-full opacity-0" />
-    </span>
   );
 }

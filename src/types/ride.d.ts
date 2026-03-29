@@ -18,3 +18,12 @@ export interface Ride {
 export interface RideWithClient extends Ride{
     client: Client
 }
+export interface RideSheduleSelectorProps {
+  allShedules: SheduleDTO[];
+  register: UseFormRegisterReturn;
+}
+export interface SheduleDTO {
+  slot: number;
+  isAvailable: boolean;
+  formatedShedule: string;
+}
