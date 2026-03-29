@@ -10,9 +10,9 @@ interface InputProps {
 }
 export function Input({ label, type, register }: InputProps) {
   return (
-    <span className="min-w-full flex flex-col gap-2 ">
-      <label htmlFor="">{label}</label>
-      <input type={type} {...register} className="rounded-md w-full border-2 border-black shadow-md p-3 bg-dark" />
+    <span className="min-w-full flex flex-col gap-2 max-w-fit">
+      <label>{label}</label>
+      <input type={type} {...register} className="rounded-md w-full border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
     </span>
   );
 }
@@ -25,7 +25,7 @@ export function InputPassword({ label, type }: InputProps) {
     <span className="min-w-full">
       <label htmlFor="">{label}</label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full border-2 border-black shadow-md p-3 bg-dark" />
+        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full  border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
         <button type="button" className="absolute right-2 top-0" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
@@ -80,7 +80,7 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
         {label}
       </label>
 
-      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-dark p-2 border-2 rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
+      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-dark p-2  border-2 shadow-md shadow-[#111] rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
         <button id={id} type="button" onClick={toggle} className={`p-2 flex justify-between w-full ${isOpen ? 'border-b-2 border-[#333]' : ''} `}>
           <span>{value ?? 'Escolher'}</span>
           <span>{isOpen ? <ChevronUp /> : <ChevronDown />}</span>
@@ -135,7 +135,7 @@ interface ContainerShedulesProps {
 }
 export function ContainerShedules({ shedules, label, handleClick, isOpen, register }: ContainerShedulesProps) {
   return (
-    <div className={`bg-dark border border-black rounded-md shadow-black/50 shadow-md  p-5 ${isOpen ? 'h-full' : ''} flex flex-col gap-4`}>
+    <div className={`bg-dark rounded-md border-2 border-black shadow-md shadow-[#111] p-3 ${isOpen ? 'h-full' : ''} flex flex-col gap-4`}>
       <button className={`min-w-full flex justify-between items-center  ${isOpen ? 'mb-4' : ''}`} onClick={handleClick} type="button">
         {label}
         {isOpen ? <ChevronUp /> : <ChevronDown />}

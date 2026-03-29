@@ -3,7 +3,7 @@ import { Button } from '@/src/components/button';
 import { Select, Input, RideSheduleSelector } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
-import { Motorbike } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Motorbike } from 'lucide-react';
 import { useForm, type SubmitHandler, Controller, Watch } from 'react-hook-form';
 
 interface CreateRideDTO {
@@ -23,10 +23,10 @@ interface SheduleDTO {
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [countForm, setCountForm] = useState<1 | 2>(1);
   const { control, register, handleSubmit, watch } = useForm<CreateRideDTO>();
   const date = watch('date_ride');
-  const time = watch('time');
-
+  
   // const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
   // useEffect(() => {
   //   if(date){
@@ -41,39 +41,61 @@ export default function Page() {
   //   }
   // }, [date]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
-    alert(data);
+   console.log(data)
   };
+  function nextForm(){
+    setCountForm(2)
+  }
+   function prevForm() {
+     setCountForm(1);
+   }
+
   return (
     <div className="py-6 px-4 flex flex-col gap-4">
       <Title>Para onde Vamos ?</Title>
       <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
-
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
-        <Input label="Data da corrida" type="date" register={register('date_ride')} />
-        {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
-        <Input label="Nome" type="text" register={register('name')} />
-        <Input label="Telefone" type="text" register={register('phone')} />
-        <Controller
-          name="origin"
-          control={control}
-          render={({ field }) => {
-            return <Select data={data} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
-          }}
-        />
-        <Controller
-          name="destination"
-          control={control}
-          render={({ field }) => {
-            return <Select data={data} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
-          }}
-        />
-        <Input label="Ponto de referência" type="text" register={register('point_reference')} />
-        <span className="flex justify-between text-xl">
-          <p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p>
-        </span>
-        <Button loadingState={loading}>
-          Criar Corrida <Motorbike />
-        </Button>
+        {countForm === 1 && (
+          <div className="flex flex-col gap-10">
+            <Input label="Nome" type="text" register={register('name')} />
+            <Input label="Telefone" type="text" register={register('phone')} />
+            <Input label="Data da corrida" type="date" register={register('date_ride')} />
+            {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
+            <Button type="button" onClick={nextForm}>
+              Adicionar endereços
+              <ArrowRight/>
+            </Button>
+          </div>
+        )}
+        {countForm === 2 && (
+          <div className="flex flex-col gap-10">
+            <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
+              <ArrowLeft />
+              Voltar
+            </button>
+            <Controller
+              name="origin"
+              control={control}
+              render={({ field }) => {
+                return <Select data={data} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin"/>;
+              }}
+            />
+            <Controller
+              name="destination"
+              control={control}
+              render={({ field }) => {
+                return <Select data={data} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
+              }}
+            />
+            <Input label="Ponto de referência" type="text" register={register('point_reference')} />
+            <span className="flex justify-between text-xl">
+              <p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p>
+            </span>
+            <Button type="submit" loadingState={loading}>
+              Criar Corrida <Motorbike />
+            </Button>
+          </div>
+        )}
       </form>
     </div>
   );
