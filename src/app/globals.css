@@ -21,7 +21,11 @@
 *{
   box-sizing: border-box;
 }
-
+input[type="date"] {
+  width: 100%;
+  min-width: 0;
+  display: block;
+}
 body {
   background: #131313;
   color: #fff;
