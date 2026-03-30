@@ -84,7 +84,17 @@ input:focus {
   width: 0px;
   opacity: 0;
 }
-
+.count-page{
+  position: relative;
+}
+.count-page-active{
+  background-color: #f59e0b;
+  font-weight: 800;
+  border-color: #f59e0b;
+  color: #fff;
+  transform: scale3d(1.2, 1.4, 1.2);
+  transition: all .3s ease;
+}
 .animate-box-down {
   animation: box-down 1s ease-in-out ease-in-out;
 }

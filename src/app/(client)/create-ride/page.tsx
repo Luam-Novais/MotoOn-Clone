@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/src/components/button';
-import { Select, Input, RideSheduleSelector } from '@/src/components/input';
+import { Select, Input, RideSheduleSelector, InputDate } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Motorbike } from 'lucide-react';
@@ -56,18 +56,15 @@ export default function Page() {
       <Title className="text-[#090909] font-bold">Para onde Vamos ?</Title>
       <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
       <span className="flex gap-4 text-black text-sm justify-end">
-        <p className={`py-1 px-3 border rounded-full  ${countFormPage === 1 ? 'border-amber-500 bg-amber-500 text-white' : ''}`}>1</p>
-        <p className={`py-1 px-3 border rounded-full ${countFormPage === 2 ? 'border-amber-500 bg-amber-500 text-white' : ''}`}>2</p>
+        <p className={`py-1 px-3 border rounded-full  count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>1</p>
+        <p className={`py-1 px-3 border rounded-full count-page ${countFormPage === 2 ? 'count-page-active' : ''}`}>2</p>
       </span>
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-y-10 max-w-full" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
           <div className="flex flex-col gap-y-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
-            <span className="w-full flex flex-col gap-2">
-              <label>Data da corrida</label>
-              <input type='date' {...register('date_ride')} />
-            </span>
+            <InputDate label='Data da corrida' register={register('date_ride')}/>
             {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
             <Button type="button" onClick={nextForm}>
               Adicionar origem e destino

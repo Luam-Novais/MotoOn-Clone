@@ -33,6 +33,14 @@ export function InputPassword({ label }: InputProps) {
     </span>
   );
 }
+export function InputDate({ label, register }: { label: string; register: UseFormRegisterReturn }) {
+  return (
+    <span className="flex flex-col gap-2">
+      <label>{label}</label>
+      <input type="date" {...register} className="rounded-md min-w-0 border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
+    </span>
+  );
+}
 type Data = {
   desc: string;
   value: string;
