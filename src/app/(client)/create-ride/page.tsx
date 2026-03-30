@@ -64,7 +64,10 @@ export default function Page() {
           <div className="flex flex-col gap-y-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
-            <Input label="Data da corrida" type="date" register={register('date_ride')} />
+            <span className="w-full flex flex-col gap-2">
+              <label>Data da corrida</label>
+              <input type='date' {...register('date_ride')} />
+            </span>
             {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
             <Button type="button" onClick={nextForm}>
               Adicionar origem e destino
