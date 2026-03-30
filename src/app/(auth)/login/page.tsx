@@ -20,7 +20,6 @@ export default function Page() {
           <div className="flex flex-col gap-10">
             <Input label="Nome de usuário" type="text" register={register('username')} />
             <InputPassword label="Senha" type="password" register={register('password')} />
-            <Input label="data" type="date" register={register('teste')} />
           </div>
           <Button type="submit" loadingState={loading}>
             Entrar

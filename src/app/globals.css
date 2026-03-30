@@ -27,7 +27,6 @@ input[type='date'] {
   width: 100%;
   min-width: 0;
   display: block;
-  padding: 12px 4px !important;
   font-size: 0.875rem !important;
 }
 body {
