@@ -55,9 +55,13 @@ export default function Page() {
     <div className="py-6 px-4 flex flex-col gap-4 bg-gray-300 max-w-full">
       <Title className="text-[#090909] font-bold">Para onde Vamos ?</Title>
       <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
+      <span className="flex gap-4 text-black text-sm justify-end">
+        <p className={`py-1 px-3 border rounded-full  ${countFormPage === 1 ? 'border-amber-500 bg-amber-500 text-white' : ''}`}>1</p>
+        <p className={`py-1 px-3 border rounded-full ${countFormPage === 2 ? 'border-amber-500 bg-amber-500 text-white' : ''}`}>2</p>
+      </span>
       <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-y-10 max-w-full" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
-          <div className="flex flex-col gap-y-10 overflow-hidden">
+          <div className="flex flex-col gap-y-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
             <Input label="Data da corrida" type="date" register={register('date_ride')} />
@@ -69,7 +73,7 @@ export default function Page() {
           </div>
         )}
         {countFormPage === 2 && (
-          <div className="flex flex-col gap-y-10 overflow-x-hidden">
+          <div className="flex flex-col gap-y-10">
             <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
               <ArrowLeft />
               alterar dados iniciais
