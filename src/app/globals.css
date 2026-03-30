@@ -18,7 +18,18 @@
     --foreground: #ededed;
   }
 }
-
+* {
+  box-sizing: border-box;
+}
+input[type='date'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-width: 0;
+  display: block;
+  padding: 12px 4px !important;
+  font-size: 0.875rem !important;
+}
 body {
   background: #131313;
   color: #fff;
@@ -77,9 +88,19 @@ input:focus{
   width: 0px;
   opacity: 0;
 }
-
-.animate-box-down{
-   animation: box-down 1s ease-in-out ease-in-out;
+.count-page {
+  position: relative;
+}
+.count-page-active {
+  background-color: #f59e0b;
+  font-weight: 800;
+  border-color: #f59e0b;
+  color: #fff;
+  transform: scale3d(1.2, 1.4, 1.2);
+  transition: all 0.3s ease;
+}
+.animate-box-down {
+  animation: box-down 1s ease-in-out ease-in-out;
 }
 @keyframes box-down {
   0%{
