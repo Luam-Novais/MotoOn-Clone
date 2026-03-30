@@ -42,6 +42,7 @@ export default function Page() {
   // }, [date]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
     console.log(data);
+    alert('Corrida criada com sucesso, aguarde a confirmação do motoboy.');
   };
   function nextForm() {
     setCountFormPage(2);
@@ -51,27 +52,31 @@ export default function Page() {
   }
 
   return (
-    <div className="py-6 px-4 flex flex-col gap-4">
-      <Title>Para onde Vamos ?</Title>
-      <p className="text-[#ddd]">Nos diga para onde deseja ir, que levaremos você.</p>
-      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-10" onSubmit={handleSubmit(onSubimit)} action="">
+    <div className="py-6 px-4 flex flex-col gap-4 bg-gray-300 max-w-full">
+      <Title className="text-[#090909] font-bold">Para onde Vamos ?</Title>
+      <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
+      <span className="flex gap-4 text-black text-sm justify-end">
+        <p className={`py-1 px-3 border rounded-full  count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>1</p>
+        <p className={`py-1 px-3 border rounded-full count-page ${countFormPage === 2 ? 'count-page-active' : ''}`}>2</p>
+      </span>
+      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-y-10 max-w-full" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-y-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
             <Input label="Data da corrida" type="date" register={register('date_ride')} />
             {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
             <Button type="button" onClick={nextForm}>
-              Adicionar endereços
+              Adicionar origem e destino
               <ArrowRight />
             </Button>
           </div>
         )}
         {countFormPage === 2 && (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-y-10">
             <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
               <ArrowLeft />
-              Voltar
+              alterar dados iniciais
             </button>
             <Controller
               name="origin"

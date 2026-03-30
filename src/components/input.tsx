@@ -10,22 +10,22 @@ interface InputProps {
 }
 export function Input({ label, type, register }: InputProps) {
   return (
-    <span className="min-w-full flex flex-col gap-2 max-w-fit">
+    <span className="w-full flex flex-col gap-2">
       <label>{label}</label>
-      <input type={type} {...register} className="rounded-md w-full border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
+      <input type={type} {...register} className="rounded-md w-full min-w-0 border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
     </span>
   );
 }
-export function InputPassword({ label, type }: InputProps) {
+export function InputPassword({ label }: InputProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   function handleVisibilityButton() {
     setIsVisible((prev) => !prev);
   }
   return (
-    <span className="min-w-full">
+    <span className="w-full">
       <label htmlFor="">{label}</label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full  border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
+        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full min-w-0 border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
         <button type="button" className="absolute right-2 top-0" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
