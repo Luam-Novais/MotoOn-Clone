@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/src/components/button';
-import { Select, Input, RideSheduleSelector, InputDate } from '@/src/components/input';
+import { Select, Input, RideSheduleSelector } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Motorbike } from 'lucide-react';
@@ -64,7 +64,7 @@ export default function Page() {
           <div className="flex flex-col gap-y-10">
             <Input label="Nome" type="text" register={register('name')} />
             <Input label="Telefone" type="text" register={register('phone')} />
-            <InputDate label='Data da corrida' register={register('date_ride')}/>
+            <Input label="Data da corrida" type="date" register={register('date_ride')} />
             {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
             <Button type="button" onClick={nextForm}>
               Adicionar origem e destino
