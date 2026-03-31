@@ -18,6 +18,18 @@ export interface Ride {
 export interface RideWithClient extends Ride{
     client: Client
 }
+export interface CreateRideDTO {
+  origin: string;
+  destination: string;
+  date_ride: Date;
+  point_reference: string;
+  name: string;
+  phone: string;
+  time: string;
+}
+// export interface RideRoutes{
+
+// }
 export interface RideSheduleSelectorProps {
   allShedules: SheduleDTO[];
   register: UseFormRegisterReturn;

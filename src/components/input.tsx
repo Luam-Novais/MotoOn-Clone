@@ -37,13 +37,9 @@ type Data = {
   desc: string;
   value: string;
 };
-interface SelectProps {
-  data: string[];
-  label: string;
-}
 
 interface SelectProps {
-  data: string[];
+  data: string[] | null;
   label: string;
   value: string | null;
   onChange: (value: string | null) => void;
@@ -80,7 +76,7 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
         {label}
       </label>
 
-      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} text-base bg-dark p-2  border-2 shadow-md shadow-[#111] rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
+      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} ${data ? '' : 'disabled'} text-base bg-dark p-2  border-2 shadow-md shadow-[#111] rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
         <button id={id} type="button" onClick={toggle} className={`p-2 flex justify-between w-full ${isOpen ? 'border-b-2 border-[#333]' : ''} `}>
           <span>{value ?? 'Escolher'}</span>
           <span>{isOpen ? <ChevronUp /> : <ChevronDown />}</span>
@@ -88,11 +84,12 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
 
         {isOpen && (
           <ul id={`${id}-listbox`} role="listbox" className="mt-2">
-            {data.map((item) => (
-              <li key={item} role="option" aria-selected={value === item} tabIndex={0} className={`p-2 cursor-pointer ${value === item ? 'bg-gray-700' : ''}`} onClick={() => handleSelect(item)}>
-                {item}
-              </li>
-            ))}
+            {data &&
+              data.map((item) => (
+                <li key={item} role="option" aria-selected={value === item} tabIndex={0} className={`p-2 cursor-pointer ${value === item ? 'bg-gray-700' : ''}`} onClick={() => handleSelect(item)}>
+                  {item}
+                </li>
+              ))}
 
             <li role="option" tabIndex={0} className="p-2 text-gray-400 cursor-pointer" onClick={() => handleSelect(null)}>
               Limpar
@@ -103,6 +100,17 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
     </div>
   );
 }
+// export function Select({locations, label}:{locations: string[], label:string}){
+//   return(
+//     <select name="" id="" className='bg-input'>
+//       {locations.map((l)=>{
+//         return (
+//           <option value="l">{l}</option>
+//         )
+//       })}
+//     </select>
+//   )
+// }
 
 export function RideSheduleSelector({ allShedules, register }: RideSheduleSelectorProps) {
   const [morningPeriod, afterPeriod] = allShedules.reduce<SheduleDTO[][]>(

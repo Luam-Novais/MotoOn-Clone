@@ -1,45 +1,48 @@
 'use client';
 import { Button } from '@/src/components/button';
-import { Select, Input, RideSheduleSelector } from '@/src/components/input';
+import { Input, RideSheduleSelector, Select } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
+import { type CreateRideDTO } from '@/src/types/ride';
 import { ArrowLeft, ArrowRight, Motorbike } from 'lucide-react';
-import { useForm, type SubmitHandler, Controller, Watch } from 'react-hook-form';
-
-interface CreateRideDTO {
-  origin: string;
-  destination: string;
-  date_ride: Date;
-  point_reference: string;
-  name: string;
-  phone: string;
-  time: string;
-}
-interface SheduleDTO {
-  slot: number;
-  isAvailable: boolean;
-  formatedShedule: string;
-}
+import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
+import { SheduleDTO } from '@/src/types/ride';
+import { buildRoutes } from '@/src/api/buildRoutes';
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [countFormPage, setCountFormPage] = useState<1 | 2>(1);
-  const { control, register, handleSubmit, watch } = useForm<CreateRideDTO>();
+  const { control, register, handleSubmit, watch, setValue } = useForm<CreateRideDTO>();
   const date = watch('date_ride');
-
-  // const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
-  // useEffect(() => {
-  //   if(date){
-  //     async function getSlots() {
-  //       const response = await fetch(`http://localhost:3001/ride/get-slots?date_ride=${date}`);
-  //       const json = await response.json();
-  //       if (response.ok) {
-  //         setSlots(json.allSlots);
-  //       }
-  //     }
-  //     getSlots();
-  //   }
-  // }, [date]);
+  const origin = watch('origin');
+  const destination = watch('destination');
+  const [allowedOrigins, setAllowedOrigins] = useState<Record<string, Record<string, number>> | null>(null);
+  const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
+  useEffect(() => {
+    async function getRoutes() {
+      const response = await fetch(`http://localhost:3001/ride/get-routes`);
+      const json = await response.json();
+      if (response.ok) {
+        setAllowedOrigins(json);
+      }
+    }
+    getRoutes();
+  }, []);
+  useEffect(() => {
+    if (date) {
+      async function getSlots() {
+        const response = await fetch(`http://localhost:3001/ride/get-slots?date_ride=${date}`);
+        const json = await response.json();
+        if (response.ok) {
+          setSlots(json.allSlots);
+        }
+      }
+      getSlots();
+    }
+  }, [date]);
+  useEffect(() => {
+    setValue('destination', '');
+  }, [origin]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
     console.log(data);
     alert('Corrida criada com sucesso, aguarde a confirmação do motoboy.');
@@ -78,24 +81,31 @@ export default function Page() {
               <ArrowLeft />
               alterar dados iniciais
             </button>
-            <Controller
-              name="origin"
-              control={control}
-              render={({ field }) => {
-                return <Select data={data} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
-              }}
-            />
-            <Controller
-              name="destination"
-              control={control}
-              render={({ field }) => {
-                return <Select data={data} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
-              }}
-            />
+            {/* {allowedOrigins && <Select locations={Object.keys(allowedOrigins)} label='Origem'/>} */}
+            {allowedOrigins && (
+              <>
+                <Controller
+                  name="origin"
+                  control={control}
+                  render={({ field }) => {
+                    return <Select data={Object.keys(allowedOrigins)} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
+                  }}
+                />
+                  <Controller
+                    name="destination"
+                    control={control}
+                    render={({ field }) => {
+                      return <Select data={origin ? Object.keys(allowedOrigins[origin]): null} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
+                    }}
+                  />
+              </>
+            )}
             <Input label="Ponto de referência" type="text" register={register('point_reference')} />
-            <span className="flex justify-between text-xl">
-              <p>Valor:</p> <p className="text-amber-500 font-semibold">R$7,00</p>
-            </span>
+            {allowedOrigins && origin && destination &&  (
+              <span className="flex justify-between text-xl">
+                <p>Valor:</p> <p className="text-amber-500 font-semibold">R${allowedOrigins[origin][destination].toFixed(2).replace('.', ',')}</p>
+              </span>
+            )}
             <Button type="submit" loadingState={loading}>
               Criar Corrida <Motorbike />
             </Button>
