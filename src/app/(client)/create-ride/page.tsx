@@ -4,10 +4,10 @@ import { Input, RideSheduleSelector, Select } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
 import { type CreateRideDTO } from '@/src/types/ride';
-import { ArrowLeft, ArrowRight, Motorbike } from 'lucide-react';
+import { ArrowRight, Motorbike, User, Phone, CalendarDays, Pencil } from 'lucide-react';
 import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { SheduleDTO } from '@/src/types/ride';
-import { buildRoutes } from '@/src/api/buildRoutes';
+import { allowedRoutes } from '@/src/data/routes';
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,18 +16,18 @@ export default function Page() {
   const date = watch('date_ride');
   const origin = watch('origin');
   const destination = watch('destination');
-  const [allowedOrigins, setAllowedOrigins] = useState<Record<string, Record<string, number>> | null>(null);
+  // const [allowedOrigins, setAllowedOrigins] = useState<Record<string, Record<string, number>> | null>(null);
   const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
-  useEffect(() => {
-    async function getRoutes() {
-      const response = await fetch(`http://localhost:3001/ride/get-routes`);
-      const json = await response.json();
-      if (response.ok) {
-        setAllowedOrigins(json);
-      }
-    }
-    getRoutes();
-  }, []);
+  // useEffect(() => {
+  //   async function getRoutes() {
+  //     const response = await fetch(`http://localhost:3001/ride/get-routes`);
+  //     const json = await response.json();
+  //     if (response.ok) {
+  //       setAllowedOrigins(json);
+  //     }
+  //   }
+  //   getRoutes();
+  // }, []);
   useEffect(() => {
     if (date) {
       async function getSlots() {
@@ -40,7 +40,9 @@ export default function Page() {
       getSlots();
     }
   }, [date]);
+
   useEffect(() => {
+    console.log(destination, origin)
     setValue('destination', '');
   }, [origin]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
@@ -55,20 +57,21 @@ export default function Page() {
   }
 
   return (
-    <div className="py-6 px-4 flex flex-col gap-4 bg-gray-300 max-w-full">
-      <Title className="text-[#090909] font-bold">Para onde Vamos ?</Title>
-      <p className="text-[#222]">Nos diga para onde deseja ir, que levaremos você.</p>
-      <span className="flex gap-4 text-black text-sm justify-end">
-        <p className={`py-1 px-3 border rounded-full  count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>1</p>
-        <p className={`py-1 px-3 border rounded-full count-page ${countFormPage === 2 ? 'count-page-active' : ''}`}>2</p>
+    <div className="animate-appear py-6 px-4 flex flex-col gap-4 max-w-full">
+      <Title className="font-bold">Para onde Vamos ?</Title>
+      <p className="text-[#ccc]">Nos diga para onde deseja ir, que levaremos você.</p>
+      <span className="text-black grid grid-cols-2 gap-8">
+        <p className={`count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>passo 1{countFormPage === 1 ? ': Informações' : ''}</p>
+        <p className={`count-page ${countFormPage === 2 ? 'count-page-active' : ''}`}>passo 2{countFormPage === 2 ? ': Rotas' : ''} </p>
       </span>
-      <form className="bg-container py-8 px-4 rounded-md shadow-black/50 shadow-md flex flex-col gap-y-10 max-w-full" onSubmit={handleSubmit(onSubimit)} action="">
+      <form className="bg-container py-8 px-4 rounded-xl shadow-black/50 shadow-md flex flex-col gap-y-10 max-w-full" onSubmit={handleSubmit(onSubimit)} action="">
         {countFormPage === 1 && (
           <div className="flex flex-col gap-y-10">
-            <Input label="Nome" type="text" register={register('name')} />
-            <Input label="Telefone" type="text" register={register('phone')} />
-            <Input label="Data da corrida" type="date" register={register('date_ride')} />
-            {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />}
+            <Input icon={User} label="Nome" type="text" register={register('name')} placeholder="Seu nome completo" />
+            <Input icon={Phone} placeholder="(00) 0000-0000" label="Telefone" type="text" register={register('phone')} />
+            <Input icon={CalendarDays} label="Data da corrida" type="date" register={register('date_ride')} />
+            <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />
+            {/* {date && <RideSheduleSelector allShedules={slotsTeste} register={register('time')} />} */}
             <Button type="button" onClick={nextForm}>
               Adicionar origem e destino
               <ArrowRight />
@@ -76,35 +79,39 @@ export default function Page() {
           </div>
         )}
         {countFormPage === 2 && (
-          <div className="flex flex-col gap-y-10">
-            <button className="max-w-fit bg-dark p-2 rounded-md shadow-md shadow-black/50 flex gap-4" type="button" onClick={prevForm}>
-              <ArrowLeft />
+          <div className="flex flex-col gap-y-10 animate-appear">
+            <button className="max-w-fit bg-dark px-4 py-2 rounded-md shadow-md shadow-black/50 flex items-center gap-4" type="button" onClick={prevForm}>
+              <Pencil size={16} color="#f59e0b" />
               alterar dados iniciais
             </button>
-            {/* {allowedOrigins && <Select locations={Object.keys(allowedOrigins)} label='Origem'/>} */}
-            {allowedOrigins && (
+            {allowedRoutes && (
               <>
                 <Controller
                   name="origin"
                   control={control}
                   render={({ field }) => {
-                    return <Select data={Object.keys(allowedOrigins)} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
+                    return <Select data={Object.keys(allowedRoutes)} label="Ponto de origem" onChange={field.onChange} value={field.value} id="origin" />;
                   }}
                 />
+                {origin && (
                   <Controller
                     name="destination"
                     control={control}
                     render={({ field }) => {
-                      return <Select data={origin ? Object.keys(allowedOrigins[origin]): null} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
+                      return <Select data={origin ? Object.keys(allowedRoutes[origin]) : null} label="Ponto de destino" onChange={field.onChange} value={field.value} id="destination" />;
                     }}
                   />
+                )}
               </>
             )}
             <Input label="Ponto de referência" type="text" register={register('point_reference')} />
-            {allowedOrigins && origin && destination &&  (
-              <span className="flex justify-between text-xl">
-                <p>Valor:</p> <p className="text-amber-500 font-semibold">R${allowedOrigins[origin][destination].toFixed(2).replace('.', ',')}</p>
-              </span>
+            {allowedRoutes && destination && destination && (
+              <div className="flex justify-center bg-dark rounded-xl shadow-md">
+                <span className="flex flex-col py-4">
+                  <p className="text-[0.75rem] text-[#ccc] uppercase">Valor:</p>
+                  <p className="text-amber-500 font-semibold text-3xl">R${allowedRoutes[origin][destination].toFixed(2).replace('.', ',')}</p>
+                </span>
+              </div>
             )}
             <Button type="submit" loadingState={loading}>
               Criar Corrida <Motorbike />
@@ -116,7 +123,7 @@ export default function Page() {
   );
 }
 
-const data = ['freitas', 'centro', 'pq_mariana'];
+// const data = ['freitas', 'centro', 'pq_mariana'];
 
 const slotsTeste = [
   {
@@ -250,3 +257,5 @@ const slotsTeste = [
     formatedShedule: '17:30',
   },
 ];
+
+//

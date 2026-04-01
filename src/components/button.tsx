@@ -10,7 +10,7 @@ interface ButtonProps {
 }
 export function Button({ children, loadingState, type, className, disabled, onClick}: ButtonProps) {
   return (
-    <button disabled={disabled} type={type} onClick={onClick} className={` py-2 px-6 bg-linear-to-b text-amber-950 font-medium from-amber-300 to-amber-600 shadow-xl rounded-md justify-center items-center flex gap-8 ${className}`}>
+    <button disabled={disabled} type={type} onClick={onClick} className={` py-2 px-6 bg-linear-to-b text-amber-950 font-medium from-amber-300 to-amber-600 shadow-xl rounded-xl justify-center items-center flex gap-8 ${className}`}>
       {children} {loadingState ? <SpinnerWithButton /> : ''}
     </button>
   );

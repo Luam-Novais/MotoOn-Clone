@@ -1,31 +1,39 @@
 import { useState, useRef, useEffect } from 'react';
-import { EyeClosed, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { EyeClosed, Eye, ChevronDown, ChevronUp, LucideIcon } from 'lucide-react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { CardShedule } from './cards';
 import { SheduleDTO, RideSheduleSelectorProps } from '../types/ride';
 interface InputProps {
   label: string;
   type: string;
+  icon?: LucideIcon;
+  placeholder?: string;
   register: UseFormRegisterReturn;
 }
-export function Input({ label, type, register }: InputProps) {
+export function Input({ label, type, register, icon: Icon, placeholder }: InputProps) {
   return (
-    <span className="w-full flex flex-col gap-2">
-      <label>{label}</label>
-      <input type={type} {...register} className="rounded-md w-full min-w-0  border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
+    <span className="w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in">
+      <label className="flex items-center text-sm gap-2 px-1">
+        {Icon && <Icon size={18} />}
+        {label}
+      </label>
+      <input type={type} {...register} className="text-white rounded-xl w-full min-w-0  border border-[#111] shadow-md shadow-[#191919] p-3 bg-dark" placeholder={placeholder} />
     </span>
   );
 }
-export function InputPassword({ label }: InputProps) {
+export function InputPassword({ label, icon: Icon, placeholder }: InputProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   function handleVisibilityButton() {
     setIsVisible((prev) => !prev);
   }
   return (
-    <span className="w-full flex flex-col gap-2">
-      <label htmlFor="">{label}</label>
+    <span className="w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in">
+      <label className="flex items-center text-sm gap-2 px-1">
+        {Icon && <Icon size={18} />}
+        {label}
+      </label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative rounded-md w-full min-w-0 border-2 border-black shadow-md shadow-[#111] p-3 bg-dark" />
+        <input type={isVisible ? 'text' : 'password'} className="relative text-white rounded-xl w-full min-w-0  border border-[#111] shadow-md shadow-[#191919] p-3 bg-dark" placeholder={placeholder} />
         <button type="button" className="absolute right-2 top-3.5" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
@@ -33,11 +41,6 @@ export function InputPassword({ label }: InputProps) {
     </span>
   );
 }
-type Data = {
-  desc: string;
-  value: string;
-};
-
 interface SelectProps {
   data: string[] | null;
   label: string;
@@ -71,12 +74,12 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 min-w-full" ref={containerRef}>
+    <div className="animate-appear flex flex-col gap-2 min-w-full" ref={containerRef}>
       <label className="text-sm" htmlFor={id}>
         {label}
       </label>
 
-      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} ${data ? '' : 'disabled'} text-base bg-dark p-2  border-2 shadow-md shadow-[#111] rounded-md transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
+      <div className={`${isOpen ? 'border-amber-500' : 'border-black'} ${data ? '' : 'disabled'} text-base bg-dark p-2  border shadow-md shadow-[#111] rounded-xl transition-all duration-300 ease-in-out`} role="combobox" aria-expanded={isOpen} aria-controls={`${id}-listbox`}>
         <button id={id} type="button" onClick={toggle} className={`p-2 flex justify-between w-full ${isOpen ? 'border-b-2 border-[#333]' : ''} `}>
           <span>{value ?? 'Escolher'}</span>
           <span>{isOpen ? <ChevronUp /> : <ChevronDown />}</span>
@@ -86,7 +89,7 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
           <ul id={`${id}-listbox`} role="listbox" className="mt-2">
             {data &&
               data.map((item) => (
-                <li key={item} role="option" aria-selected={value === item} tabIndex={0} className={`p-2 cursor-pointer ${value === item ? 'bg-gray-700' : ''}`} onClick={() => handleSelect(item)}>
+                <li key={item} role="option" aria-selected={value === item} tabIndex={0} className={`px-2 py-3 cursor-pointer ${value === item ? 'bg-gray-700' : ''}`} onClick={() => handleSelect(item)}>
                   {item}
                 </li>
               ))}
@@ -100,17 +103,6 @@ export function Select({ data, label, value, onChange, id = 'select' }: SelectPr
     </div>
   );
 }
-// export function Select({locations, label}:{locations: string[], label:string}){
-//   return(
-//     <select name="" id="" className='bg-input'>
-//       {locations.map((l)=>{
-//         return (
-//           <option value="l">{l}</option>
-//         )
-//       })}
-//     </select>
-//   )
-// }
 
 export function RideSheduleSelector({ allShedules, register }: RideSheduleSelectorProps) {
   const [morningPeriod, afterPeriod] = allShedules.reduce<SheduleDTO[][]>(
@@ -121,14 +113,30 @@ export function RideSheduleSelector({ allShedules, register }: RideSheduleSelect
     },
     [[], []],
   );
-  const [morningOpen, setMorningOpen] = useState<boolean>(false);
-  const [afterOpen, setAfterOpen] = useState<boolean>(false);
+  const [periodState, setPeriodState] = useState<'morning' | 'after'>('morning');
   return (
     <div className="flex flex-col gap-3">
-      <h1>Horário da corrida</h1>
-      <div className="flex flex-col gap-6 min-h-full h-full">
-        <ContainerShedules register={register} shedules={morningPeriod} label="Manhã" handleClick={() => setMorningOpen((prev) => !prev)} isOpen={morningOpen} />
-        <ContainerShedules register={register} shedules={afterPeriod} label="Tarde" handleClick={() => setAfterOpen((prev) => !prev)} isOpen={afterOpen} />
+      <h1 className="uppercase text-2 sm">Horário da corrida</h1>
+      <div className="flex flex-col gap-2 h-full">
+        <span className="bg-dark p-2 rounded-xl flex justify-between gap-2 mb-4">
+          <button
+            onClick={() => setPeriodState('morning')}
+            type="button"
+            className={`px-8 py-2 rounded-xl transition-all duration-400 ease cursor-pointer 
+          ${periodState === 'morning' ? 'bg-container shadow-md shadow-black' : ''}`}
+          >
+            Manhã
+          </button>
+          <button
+            onClick={() => setPeriodState('after')}
+            type="button"
+            className={`px-8 py-2 rounded-xl transition-all duration-300 ease cursor-pointer 
+          ${periodState === 'after' ? 'bg-container shadow-md shadow-black' : ''}`}
+          >
+            Tarde
+          </button>
+        </span>
+        <ContainerShedules register={register} shedules={periodState === 'morning' ? morningPeriod : afterPeriod} />
       </div>
     </div>
   );
@@ -136,24 +144,14 @@ export function RideSheduleSelector({ allShedules, register }: RideSheduleSelect
 
 interface ContainerShedulesProps {
   shedules: SheduleDTO[];
-  label: string;
-  handleClick: () => void;
-  isOpen: boolean;
   register: UseFormRegisterReturn;
 }
-export function ContainerShedules({ shedules, label, handleClick, isOpen, register }: ContainerShedulesProps) {
+export function ContainerShedules({ shedules, register }: ContainerShedulesProps) {
   return (
-    <div className={`bg-dark rounded-md border-2 border-black shadow-md shadow-[#111] p-3 ${isOpen ? 'h-full' : ''} flex flex-col gap-4`}>
-      <button className={`min-w-full flex justify-between items-center  ${isOpen ? 'mb-4' : ''}`} onClick={handleClick} type="button">
-        {label}
-        {isOpen ? <ChevronUp /> : <ChevronDown />}
-      </button>
-
-      <ul className={`relative max-w-full w-full  ${isOpen ? 'block' : 'hidden'} flex flex-wrap  items-center pb-5 gap-6 gap-y-12`}>
-        {shedules.map((s) => {
-          return <li key={s.slot}>{<CardShedule shedule={s} register={register} />}</li>;
-        })}
-      </ul>
-    </div>
+    <ul className={`bg-dark px-2 py-8 rounded-xl w-full flex flex-wrap justify-center  items-center gap-6 `}>
+      {shedules.map((s) => {
+        return <CardShedule key={s.slot} shedule={s} register={register} />;
+      })}
+    </ul>
   );
 }

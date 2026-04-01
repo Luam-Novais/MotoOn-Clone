@@ -39,14 +39,14 @@ export function CardRidesToday({ rides }: { rides: RideWithClient[] }) {
 
 export function CardShedule({ shedule, register }: { shedule: SheduleDTO; register: UseFormRegisterReturn }) {
   return (
-    <span
-      className={`relative p-4 border-2 border-transparent rounded-md shadow-md shadow-black 
+    <li
+      className={`relative py-2 px-4 border-2 border-transparent rounded-md shadow-md shadow-black 
     ${shedule.isAvailable ? 'has-[input:checked]:border-amber-500 has-[input:checked]:text-amber-500 bg-container ' : 'bg-[#191919] text-[#777] backdrop-opacity-80'}`}
     >
       <label className="has-[input:checked]:text-amber-500" htmlFor={shedule.slot.toString()}>
         {shedule.formatedShedule}
       </label>
       <input type="radio" value={shedule.formatedShedule} {...register} id={shedule.slot.toString()} disabled={!shedule.isAvailable} className="absolute inset-0 min-w-full min-h-full opacity-0" />
-    </span>
+    </li>
   );
 }
