@@ -88,11 +88,7 @@ input:focus {
   width: 0px;
   opacity: 0;
 }
-/* .disabled {
-  pointer-events: none;
-  background-color: !important;
 
-} */
 .count-page {
   position: relative;
   text-transform: uppercase;
@@ -113,6 +109,9 @@ input:focus {
   font-weight: 600;
   color: #f59e0b;
   transition: all 0.3s ease;
+}
+.disabled-btn{
+  background-color: #000 !important;
 }
 .count-page-active::before {
   content: '';

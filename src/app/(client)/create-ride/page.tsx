@@ -42,7 +42,7 @@ export default function Page() {
   }, [date]);
 
   useEffect(() => {
-    console.log(destination, origin)
+    console.log(destination, origin);
     setValue('destination', '');
   }, [origin]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
@@ -109,7 +109,7 @@ export default function Page() {
               <div className="flex justify-center bg-dark rounded-xl shadow-md">
                 <span className="flex flex-col py-4">
                   <p className="text-[0.75rem] text-[#ccc] uppercase">Valor:</p>
-                  <p className="text-amber-500 font-semibold text-3xl">R${allowedRoutes[origin][destination].toFixed(2).replace('.', ',')}</p>
+                  <p className="text-amber-500 font-semibold text-3xl">{allowedRoutes[origin][destination] !== undefined ? `R$${allowedRoutes[origin][destination].toFixed(2).replace('.', ',')}` : 'Valor a combinar com Motoboy.'}</p>
                 </span>
               </div>
             )}

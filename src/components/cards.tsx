@@ -1,39 +1,65 @@
 import { RideWithClient } from '../types/ride';
-import { formatToCurrency, minutesToHoursFormated } from '../utils/functionsFormat';
+import { minutesToHoursFormated } from '../utils/functionsFormat';
+import { MapPin, Navigation, Clock10 } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
+import { Button } from './button';
 
 export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
-  return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/0 border-l-2 border-amber-500 ${style}`}>{children}</div>;
+  return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
 }
 
-export function CardRidesToday({ rides }: { rides: RideWithClient[] }) {
+export function CardRidesToday({ ride }: { ride: RideWithClient }) {
+  const currentMinutes = new Date().getHours() * 60;
   return (
-    <ContainerCard style="p-4 flex flex-col gap-5">
-      <h3 className="text-2xl">Corridas confirmadas para hoje.</h3>
-      <ul className="flex flex-col gap-5">
-        {rides.map((ride) => {
-          return (
-            <li key={ride.id} className="flex flex-col gap-8 bg-input p-4 rounded-md shadow-md shadow-black/50">
-              <span className="flex justify-between">
-                <p className="text-xl">{ride.client.name}</p>
-                <p className="text-xl">{ride.client.phone}</p>
-              </span>
-              <span>
-                <p className="text-base">
-                  {ride.origin} X {ride.destination}
-                </p>
-                <p className="text-sm text-gray-300">{ride.address}</p>
-              </span>
-              <span className="flex justify-between text-xl">
-                <p className=" text-amber-500">{formatToCurrency(ride.value)}</p>
-                <p>{minutesToHoursFormated(ride.start_ride)}</p>
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </ContainerCard>
+    <li key={ride.id} className="flex flex-col gap-10 bg-dark p-4 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500">
+      <div className="flex items-start justify-between gap-4">
+        <span className="flex flex-col gap-2">
+          <span className="flex flex-col gap-2">
+            <p className="text-xl flex font-semibold capitalize">{ride.client.name.split(' ')[0]}</p>
+            <p className="text-[#ccc]">{ride.client.phone}</p>
+          </span>
+        </span>
+        <span className="flex gap-1 text-amber-500">
+          <p className="font-medium">R$</p>
+          <p className="text-3xl font-semibold italic">{ride.value.toFixed(2).replace('.', ',')}</p>
+        </span>
+      </div>
+      <div className="flex flex-col gap-2 bg-container p-4 rounded-xl shadow-md shadow-black">
+        <span className="flex gap-2 items-start">
+          <MapPin size={14} color="#FFE3B4bb" />
+          <span>
+            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Origem</p>
+            <p className="capitalize">{ride.origin}</p>
+          </span>
+        </span>
+        <p className="px-10 text-amber-500">X</p>
+        <span className="flex gap-2 items-start">
+          <Navigation size={14} color="#FFE3B4bb" />
+          <span>
+            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Destino</p>
+            <p className="capitalize">{ride.destination}</p>
+          </span>
+        </span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className="flex gap-2 items-start">
+          <Clock10 size={14} color="#FFE3B4bb" />
+          <span>
+            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Horário</p>
+            <p className="text-xl">{minutesToHoursFormated(ride.start_ride)}</p>
+          </span>
+        </span>
+        <button
+          disabled={currentMinutes >= ride.start_ride ? false : true}
+          className={`py-2 px-4 font-medium bg-linear-to-b text-amber-950 
+        from-amber-300 to-amber-600 shadow-xl rounded-xl justify-center items-center flex gap-2 disabled-btn`}
+        >
+          Finalizar Corrida
+        </button>
+      </div>
+    </li>
   );
 }
 
