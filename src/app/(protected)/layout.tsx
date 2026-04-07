@@ -1,5 +1,5 @@
 'use client'
-import Header from "@/src/components/header";
+import{ Header} from "@/src/components/header";
 import { usePathname } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
