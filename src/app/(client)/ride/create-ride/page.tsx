@@ -4,10 +4,12 @@ import { Input, RideSheduleSelector, Select } from '@/src/components/input';
 import { Title } from '@/src/components/title';
 import { useEffect, useState } from 'react';
 import { type CreateRideDTO } from '@/src/types/ride';
-import { ArrowRight, Motorbike, User, Phone, CalendarDays, Pencil } from 'lucide-react';
+import { ArrowRight, Motorbike, User, Phone, CalendarDays, Pencil, ArrowLeft } from 'lucide-react';
 import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { SheduleDTO } from '@/src/types/ride';
 import { allowedRoutes } from '@/src/data/routes';
+import Link from 'next/link';
+
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,10 +57,12 @@ export default function Page() {
   function prevForm() {
     setCountFormPage(1);
   }
-
   return (
     <div className="animate-appear py-6 px-4 flex flex-col gap-4 max-w-full">
-      <Title className="font-bold">Para onde Vamos ?</Title>
+      <span className='flex gap-3 items-center'>
+        <Link href={'/ride'}><ArrowLeft size={30}/></Link>
+        <Title className="font-bold">Para onde Vamos ?</Title>
+      </span>
       <p className="text-[#ccc]">Nos diga para onde deseja ir, que levaremos você.</p>
       <span className="text-black grid grid-cols-2 gap-8">
         <p className={`count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>passo 1{countFormPage === 1 ? ': Informações' : ''}</p>

@@ -4,6 +4,8 @@ import { MapPin, Navigation, Clock10 } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
+import Image from "next/image";
+
 
 export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
   return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
@@ -33,7 +35,7 @@ export function CardRidesToday({ ride }: { ride: RideWithClient }) {
             <p className="capitalize">{ride.origin}</p>
           </span>
         </span>
-        <p className="px-10 text-amber-500">X</p>
+        <p className="px-10 text-[#FFE3B4bb]">X</p>
         <span className="flex gap-2 items-start">
           <Navigation size={14} color="#FFE3B4bb" />
           <span>
@@ -74,5 +76,26 @@ export function CardShedule({ shedule, register }: { shedule: SheduleDTO; regist
       </label>
       <input type="radio" value={shedule.formatedShedule} {...register} id={shedule.slot.toString()} disabled={!shedule.isAvailable} className="absolute inset-0 min-w-full min-h-full opacity-0" />
     </li>
+  );
+}
+
+export function CardMotoboy(){
+  return (
+    <div className="bg-container p-4 grid grid-cols-[50px_1fr] gap-x-6 gap-y-4 rounded-xl shadow-md shadow-black/50">
+      <Image src={'/user.jpg'} height={50} width={50} alt="foto do motoboy" className="rounded-full border-2 border-amber-500" />
+      <div>
+        <span>
+          <p className="text-[#ccc]">Seu Piloto</p>
+          <h3 className="text-xl">Arthur</h3>
+        </span>
+      </div>
+      <div className="col-start-1 col-end-3">
+        <h3>Informações</h3>
+        <span className="flex justify-between">
+          <p className="text-[#ccc]">Placa: HFK-990</p>
+          <p className="text-[#ccc]">Modelo da moto: Titan</p>
+        </span>
+      </div>
+    </div>
   );
 }
