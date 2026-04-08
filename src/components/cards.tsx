@@ -1,11 +1,10 @@
-import { RideWithClient } from '../types/ride';
+import { Ride, RideWithClient } from '../types/ride';
 import { minutesToHoursFormated } from '../utils/functionsFormat';
-import { MapPin, Navigation, Clock10 } from 'lucide-react';
+import { MapPin, Navigation, Clock10, MoveDown } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
-import Image from "next/image";
-
+import Image from 'next/image';
 
 export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
   return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
@@ -79,22 +78,70 @@ export function CardShedule({ shedule, register }: { shedule: SheduleDTO; regist
   );
 }
 
-export function CardMotoboy(){
+export function CardMotoboy() {
   return (
     <div className="bg-container p-4 grid grid-cols-[50px_1fr] gap-x-6 gap-y-4 rounded-xl shadow-md shadow-black/50">
       <Image src={'/user.jpg'} height={50} width={50} alt="foto do motoboy" className="rounded-full border-2 border-amber-500" />
       <div>
         <span>
-          <p className="text-[#ccc]">Seu Piloto</p>
+          <p className="text-[#bbb] text-sm">Seu Piloto</p>
           <h3 className="text-xl">Arthur</h3>
         </span>
       </div>
       <div className="col-start-1 col-end-3">
         <h3>Informações</h3>
         <span className="flex justify-between">
-          <p className="text-[#ccc]">Placa: HFK-990</p>
-          <p className="text-[#ccc]">Modelo da moto: Titan</p>
+          <p className="text-[#bbb]">
+            Placa: <span className="text-white">HFK-990</span>
+          </p>
+          <p className="text-[#bbb]">
+            Modelo da moto: <span className="text-white">Titan</span>
+          </p>
         </span>
+      </div>
+    </div>
+  );
+}
+export default function Banner({ src }: { src: string }) {
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '120px' }}>
+      <Image className="rounded-tl-xl rounded-tr-xl shadow-md shadow-black/20" src={src} alt="Mapa" fill style={{ objectFit: 'cover' }} />
+    </div>
+  );
+}
+export function CardClientViewRide({ ride }: { ride: Ride }) {
+  return (
+    <div className="bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2 border-l-4 border-amber-500">
+      <Banner src="/mapa-urbano.png" />
+      <div className="flex flex-col gap-8 p-4">
+        <span className="flex justify-between items-center">
+          <span className="flex flex-col gap-1.5">
+            <p className="text-xs text-[#ccc]">horário</p>
+            <h2 className="text-2xl italic font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
+          </span>
+          <span className="flex flex-col gap-1.5">
+            <p className="text-xs text-[#ccc]">status atual</p>
+            <p className="text-xs text-amber-500 border border-amber-500 rounded-xl p-2">{ride.status}</p>
+          </span>
+        </span>
+        <div className="flex flex-col gap-2 bg-dark p-4 rounded-xl">
+          <p className="text-xs text-[#ccc]">locais</p>
+
+          <span className="flex items-center gap-2 pb-2 relative after-line w-full">
+            <MapPin size={14} color="#FFE3B4bb" />
+            <span className="">
+              <p className="text-xs text-[#ccc]">Saindo de</p>
+              <p className="capitalize text-md">{ride.origin}</p>
+            </span>
+          </span>
+          <span className="flex gap-2 items-center">
+            <Navigation size={14} color="#FFE3B4bb" />
+            <span>
+              <p className="text-xs text-[#ccc]">Indo para</p>
+              <p className="capitalize text-md">{ride.destination}</p>
+            </span>
+          </span>
+        </div>
       </div>
     </div>
   );
