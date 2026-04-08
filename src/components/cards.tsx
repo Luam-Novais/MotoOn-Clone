@@ -109,36 +109,48 @@ export default function Banner({ src }: { src: string }) {
     </div>
   );
 }
-export function CardClientViewRide({ ride }: { ride: Ride }) {
+export function CardClientViewRide({ ride, index }: { ride: Ride, index: number }) {
+  const statusRideStyle: Record<string, string> = {
+    PENDENTE: 'amber-500',
+    CONFIRMADA: 'green-500',
+    CONCLUIDA: 'green-500',
+    CANCELADA: 'red-500',
+  };
+  console.log(index)
   return (
-    <div className="bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2 border-l-4 border-amber-500">
-      <Banner src="/mapa-urbano.png" />
+    <div className="bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2 ">
       <div className="flex flex-col gap-8 p-4">
         <span className="flex justify-between items-center">
-          <span className="flex flex-col gap-1.5">
-            <p className="text-xs text-[#ccc]">horário</p>
-            <h2 className="text-2xl italic font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
+          <span className="flex flex-col gap-1.5" >
+            <p className="text-sm text-[#ccc]">horário</p>
+            <h2 className="text-4xl font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
           </span>
           <span className="flex flex-col gap-1.5">
             <p className="text-xs text-[#ccc]">status atual</p>
-            <p className="text-xs text-amber-500 border border-amber-500 rounded-xl p-2">{ride.status}</p>
+            <p className={`text-xs text-${statusRideStyle[ride.status]} border border-${statusRideStyle[ride.status]} rounded-xl p-2`}>{ride.status}</p>
           </span>
         </span>
-        <div className="flex flex-col gap-2 bg-dark p-4 rounded-xl">
+        <div className="flex flex-col gap-4 bg-dark p-4 rounded-xl">
           <p className="text-xs text-[#ccc]">locais</p>
 
-          <span className="flex items-center gap-2 pb-2 relative after-line w-full">
+          <span className="flex items-center gap-2 relative after-line w-full">
             <MapPin size={14} color="#FFE3B4bb" />
             <span className="">
               <p className="text-xs text-[#ccc]">Saindo de</p>
-              <p className="capitalize text-md">{ride.origin}</p>
+              <p className="capitalize font-medium">{ride.origin}</p>
             </span>
           </span>
-          <span className="flex gap-2 items-center">
+          <span className="flex gap-2 items-center relative after-line ">
             <Navigation size={14} color="#FFE3B4bb" />
             <span>
               <p className="text-xs text-[#ccc]">Indo para</p>
-              <p className="capitalize text-md">{ride.destination}</p>
+              <p className="capitalize text-[1.125rem] font-semibold">{ride.destination}</p>
+            </span>
+          </span>
+          <span className="flex gap-2 items-center mt-4 ">
+            <span>
+              <p className="text-xs text-[#ccc]">Ponto de referência</p>
+              <p className="capitalize ">{ride.address}</p>
             </span>
           </span>
         </div>
