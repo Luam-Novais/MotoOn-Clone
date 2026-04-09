@@ -116,12 +116,11 @@ export function CardClientViewRide({ ride, index }: { ride: Ride, index: number 
     CONCLUIDA: 'green-500',
     CANCELADA: 'red-500',
   };
-  console.log(index)
   return (
-    <div className="bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2 ">
+    <div className={`bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2  ${index > 0 ? 'opacity-30' : ''}`}>
       <div className="flex flex-col gap-8 p-4">
         <span className="flex justify-between items-center">
-          <span className="flex flex-col gap-1.5" >
+          <span className="flex flex-col gap-1.5">
             <p className="text-sm text-[#ccc]">horário</p>
             <h2 className="text-4xl font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
           </span>

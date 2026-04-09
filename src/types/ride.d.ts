@@ -22,10 +22,10 @@ export interface CreateRideDTO {
   origin: string;
   destination: string;
   date_ride: Date;
-  point_reference: string;
-  name: string;
-  phone: string;
-  time: string;
+  address: string;
+  client_name: string;
+  client_phone: string;
+  start_ride: string;
 }
 // export interface RideRoutes{
 

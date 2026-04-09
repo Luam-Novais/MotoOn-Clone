@@ -82,7 +82,7 @@ input:focus {
     border-radius: 4px;
     z-index: -99;
   }
-   .after-line::before {
+  .after-line::before {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -120,7 +120,7 @@ input:focus {
   color: #f59e0b;
   transition: all 0.3s ease;
 }
-.disabled-btn{
+.disabled-btn {
   background-color: #000 !important;
 }
 .count-page-active::before {
@@ -138,6 +138,9 @@ input:focus {
 .animate-appear {
   animation: appear 0.7s ease-in-out forwards;
 }
+.animate-skeleton-loading {
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
 @keyframes appear {
   from {
     transform: translateY(-20px);
@@ -146,6 +149,17 @@ input:focus {
   to {
     transform: translateY(0px);
     opacity: 1;
+  }
+}
+@keyframes skeleton-loading {
+  0% {
+    background-color: #555;
+  }
+  50% {
+    background-color: #333;
+  }
+  100% {
+    background-color: #555;
   }
 }
 @keyframes box-down {
