@@ -9,35 +9,38 @@ interface InputProps {
   icon?: LucideIcon;
   placeholder?: string;
   register: UseFormRegisterReturn;
+  error: string | undefined
 }
-export function Input({ label, type, register, icon: Icon, placeholder }: InputProps) {
+export function Input({ label, type, register, icon: Icon, placeholder,error }: InputProps) {
   return (
-    <span className="w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in">
-      <label className="flex items-center text-sm gap-2 px-1">
+    <span className={`w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in`}>
+      <label className={`${error ? 'text-red-500' : ''} flex items-center text-sm gap-2 px-1 transition-all duration-200 ease-in`}>
         {Icon && <Icon size={18} />}
         {label}
       </label>
       <input type={type} {...register} className="text-white rounded-xl w-full min-w-0  border border-[#111] shadow-md shadow-[#191919] p-3 bg-dark" placeholder={placeholder} />
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </span>
   );
 }
-export function InputPassword({ label, icon: Icon, placeholder }: InputProps) {
+export function InputPassword({ label, icon: Icon, placeholder, register, error }: InputProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   function handleVisibilityButton() {
     setIsVisible((prev) => !prev);
   }
   return (
     <span className="w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in">
-      <label className="flex items-center text-sm gap-2 px-1">
+      <label className={`${error ? 'text-red-500' : ''} flex items-center text-sm gap-2 px-1 transition-all duration-200 ease-in`}>
         {Icon && <Icon size={18} />}
         {label}
       </label>
       <span className="relative h-full">
-        <input type={isVisible ? 'text' : 'password'} className="relative text-white rounded-xl w-full min-w-0  border border-[#111] shadow-md shadow-[#191919] p-3 bg-dark" placeholder={placeholder} />
+        <input type={isVisible ? 'text' : 'password'} {...register} className="relative text-white rounded-xl w-full min-w-0  border border-[#111] shadow-md shadow-[#191919] p-3 bg-dark" placeholder={placeholder} />
         <button type="button" className="absolute right-2 top-3.5" onClick={handleVisibilityButton}>
           {isVisible ? <EyeClosed color="#777" size={20} /> : <Eye color="#777" size={20} />}
         </button>
       </span>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </span>
   );
 }

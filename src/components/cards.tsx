@@ -1,10 +1,11 @@
 import { Ride, RideWithClient } from '../types/ride';
-import { minutesToHoursFormated } from '../utils/functionsFormat';
-import { MapPin, Navigation, Clock10, MoveDown } from 'lucide-react';
+import { formatToCurrency, minutesToHoursFormated } from '../utils/functionsFormat';
+import { MapPin, Navigation, Clock10, MoveDown, Motorbike, Pencil, Trash } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
 import Image from 'next/image';
+import { Payment } from '../types/payment';
 
 export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
   return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
@@ -109,7 +110,7 @@ export default function Banner({ src }: { src: string }) {
     </div>
   );
 }
-export function CardClientViewRide({ ride, index }: { ride: Ride, index: number }) {
+export function CardClientViewRide({ ride, index }: { ride: Ride; index: number }) {
   const statusRideStyle: Record<string, string> = {
     PENDENTE: 'amber-500',
     CONFIRMADA: 'green-500',
@@ -154,6 +155,37 @@ export function CardClientViewRide({ ride, index }: { ride: Ride, index: number 
           </span>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function CardPayment({ payment }: { payment: Payment }) {
+  return (
+    <div className="flex flex-col gap-4 bg-container px-2 py-4 rounded-xl border-l-4 border-amber-500 shadow-md shadow-black/50">
+      <div className="relative bg-dark p-2 rounded-xl grid grid-cols-[50px_2fr_1fr] justify-between items-start gap-3 shadow-md shadow-black/50">
+        <span className="relative p-3 flex w-fit justify-center rounded-full bg-container ">
+          <Motorbike color="#f59e0b" />
+        </span>
+        <span>
+          <p className="text-xs text-[#ccc] uppercase">Corrida</p>
+          <p className="uppercase">{payment.number_ride}</p>
+          <span className="flex gap-2 items-start">
+            <p className="capitalize text-xs">{payment.payment_method}</p>
+            <p className="text-green-500 text-xs!">concluido</p>
+          </span>
+        </span>
+        <p className="text-xl font-semibold italic justify-self-end">{formatToCurrency(payment.value)}</p>
+      </div>
+      <span className="flex justify-between gap-2 min-w-full">
+        <button className="flex items-center gap-2 px-4 py-2 bg-dark rounded-xl shadow-md shadow-black/60 ">
+          editar
+          <Pencil size={18} color="#f59e0b" />
+        </button>
+        <button className="flex items-center gap-2 px-4 py-2 text-red-500 bg-dark rounded-xl shadow-md shadow-black/60 ">
+          excluir
+          <Trash size={16} />
+        </button>
+      </span>
     </div>
   );
 }

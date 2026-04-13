@@ -8,29 +8,44 @@ import Image from 'next/image';
 import { getRides } from '@/src/service/client.services';
 import { useState, useEffect } from 'react';
 import { RideWithClient } from '@/src/types/ride';
+import { Spinner } from '@/src/components/spinner';
 
 export default function Page() {
   const [rides, setRides] = useState<RideWithClient[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [errorToken, setErrorToken] = useState<string | null>(null);
 
   async function fetchRides(token: string) {
     try {
       setLoading(true);
+      setError(null);
       const { response, json } = await getRides(token);
-      if (response.ok) {
-        setRides(json);
-      }
-    } catch (error) {
+      if (!response.ok) throw new Error(json.messageError);
+      setRides(json);
+    } catch (error: any) {
       console.error(error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
   }
   useEffect(() => {
     const token = localStorage.getItem('client_token');
+    if (!token) setErrorToken('Nenhuma corrida foi encontrada.');
     fetchRides(token as string);
   }, []);
 
+  if (loading) return <Spinner />;
+  if (errorToken)
+    return (
+      <span className="p-4 flex gap-2 items-center">
+        <Link href={'/ride'}>
+          <ArrowLeft size={30} />
+        </Link>
+        <Title>{errorToken}</Title>
+      </span>
+    );
   return (
     <section className="p-4 relative flex h-screen flex-col gap-8 animate-appear">
       <span className="flex gap-2 items-center">
@@ -41,6 +56,7 @@ export default function Page() {
       </span>
       <section className="flex flex-col gap-8">
         <CardMotoboy />
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col gap-4">
           {loading && <div className="animate-skeleton-loading bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2 h-40"></div>}
           {rides && rides.length > 0 && (

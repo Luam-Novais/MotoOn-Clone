@@ -14,6 +14,7 @@ export interface Ride {
   address: string;
   points_used: number | null;
   created_at: Date; 
+  number_ride: string
 }
 export interface RideWithClient extends Ride{
     client: Client
