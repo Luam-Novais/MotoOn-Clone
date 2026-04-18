@@ -12,6 +12,7 @@ export const fetchJson = async (url: string, options: RequestInit) => {
     json,
   };
 };
+
 export async function loginService(data: Credentials) {
   const { url, options } = httpReqBuilder.buildPost('auth/login', data);
   const { response, json } = await fetchJson(url, options as RequestInit);

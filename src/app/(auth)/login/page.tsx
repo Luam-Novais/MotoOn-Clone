@@ -7,9 +7,11 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Credentials } from '@/src/types/auth';
 import { loginService } from '@/src/service/auth.services';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
   const [errorResponse, setErrorResponse] = useState<string | null>(null);
   const {
     register,
@@ -24,6 +26,7 @@ export default function Page() {
       if (response.ok) {
         setErrorResponse(null);
         localStorage.setItem('access_token', json.accessToken);
+        router.push('/home');
       } else {
         throw new Error(json.messageError);
       }

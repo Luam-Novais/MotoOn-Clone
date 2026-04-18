@@ -1,6 +1,6 @@
 import { Ride, RideWithClient } from '../types/ride';
 import { formatToCurrency, minutesToHoursFormated } from '../utils/functionsFormat';
-import { MapPin, Navigation, Clock10, MoveDown, Motorbike, Pencil, Trash } from 'lucide-react';
+import { MapPin, Navigation, Clock10, CircleDot, Motorbike, Pencil, Trash, User, Map, CheckCheck, Phone } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
@@ -11,56 +11,91 @@ export function ContainerCard({ children, style }: { children: React.ReactNode; 
   return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
 }
 
-export function CardRidesToday({ ride }: { ride: RideWithClient }) {
-  const currentMinutes = new Date().getHours() * 60;
+function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) {
   return (
-    <li key={ride.id} className="flex flex-col gap-10 bg-dark p-4 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500">
-      <div className="flex items-start justify-between gap-4">
-        <span className="flex flex-col gap-2">
-          <span className="flex flex-col gap-2">
-            <p className="text-xl flex font-semibold capitalize">{ride.client.name.split(' ')[0]}</p>
-            <p className="text-[#ccc]">{ride.client.phone}</p>
-          </span>
+    <div className={`relative flex items-start justify-between border-b-2 border-[#222] pb-3 ${muted ? 'opacity-50' : ''}`}>
+      <span className="flex flex-col">
+        <p className="text-xs text-[#ccc]">cliente</p>
+        <p className="text-xl font-semibold capitalize">{ride.client.name.split(' ')[0]}</p>
+        <span className="flex items-center gap-2 text-[#ddd] text-base">
+          {ride.client.phone} <Phone size={16} />
         </span>
+      </span>
+
+      <span className="flex flex-col gap-2">
         <span className="flex gap-1 text-amber-500">
           <p className="font-medium">R$</p>
-          <p className="text-3xl font-semibold italic">{ride.value.toFixed(2).replace('.', ',')}</p>
+          <p className="text-4xl font-semibold italic">{ride.value.toFixed(2).replace('.', ',')}</p>
         </span>
-      </div>
-      <div className="flex flex-col gap-2 bg-container p-4 rounded-xl shadow-md shadow-black">
-        <span className="flex gap-2 items-start">
-          <MapPin size={14} color="#FFE3B4bb" />
-          <span>
-            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Origem</p>
-            <p className="capitalize">{ride.origin}</p>
+
+        <span className="flex gap-2 text-xs self-end">
+          <span className="flex gap-2 items-start">
+            <Clock10 size={14} color="#FFE3B4bb" />
+            <span>
+              <p className="text-[#FFE3B4bb] text-[0.75rem] uppercase">Horário</p>
+              <p className="text-xl">{minutesToHoursFormated(ride.start_ride)}</p>
+            </span>
           </span>
         </span>
-        <p className="px-10 text-[#FFE3B4bb]">X</p>
-        <span className="flex gap-2 items-start">
-          <Navigation size={14} color="#FFE3B4bb" />
-          <span>
-            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Destino</p>
-            <p className="capitalize">{ride.destination}</p>
-          </span>
-        </span>
+      </span>
+    </div>
+  );
+}
+function RideRoute({ ride }: { ride: RideWithClient }) {
+  return (
+    <div className="bg-[#1c1c1c] rounded-xl p-4 flex gap-4">
+      {/* Coluna dos ícones + linha */}
+      <div className="relative flex flex-col items-center">
+        {/* Bolinha origem */}
+        <span className="w-3 h-3 rounded-full border-2 border-amber-400" />
+
+        {/* Linha */}
+        <span className="w-0.5 flex-1 bg-[#333] my-1" />
+
+        {/* Bolinha destino */}
+        <MapPin size={16} />
       </div>
 
-      <div className="flex justify-between items-center">
-        <span className="flex gap-2 items-start">
-          <Clock10 size={14} color="#FFE3B4bb" />
-          <span>
-            <p className="flex items-start gap-2 text-[#FFE3B4bb] text-[0.75rem] uppercase">Horário</p>
-            <p className="text-xl">{minutesToHoursFormated(ride.start_ride)}</p>
-          </span>
-        </span>
-        <button
-          disabled={currentMinutes >= ride.start_ride ? false : true}
-          className={`py-2 px-4 font-medium bg-linear-to-b text-amber-950 
-        from-amber-300 to-amber-600 shadow-xl rounded-xl justify-center items-center flex gap-2 disabled-btn`}
-        >
-          Finalizar Corrida
-        </button>
+      {/* Conteúdo */}
+      <div className="flex flex-col justify-between gap-4">
+        <div>
+          <p className="text-xs tracking-widest text-[#888] uppercase">Origem</p>
+          <p className="text-lg font-semibold text-[#eee] capitalize">{ride.origin}</p>
+        </div>
+
+        <div>
+          <p className="text-xs tracking-widest text-[#888] uppercase">Destino</p>
+          <p className="text-lg font-semibold text-[#eee] capitalize">{ride.destination}</p>
+        </div>
       </div>
+    </div>
+  );
+}
+
+type Props = {
+  ride: RideWithClient;
+  index: number;
+  onClick?: () => void;
+};
+
+export function CardRidesToday({ ride, index, onClick }: Props) {
+  const currentMinutes = new Date().getHours() * 60;
+  const isFirst = index === 0;
+
+  return (
+    <li className="flex flex-col gap-4 bg-dark p-4 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500">
+      <RideHeader ride={ride} muted={!isFirst} />
+
+      {isFirst && (
+        <>
+          <RideRoute ride={ride} />
+
+          <Button type="button" onClick={onClick}>
+            Finalizar Corrida
+            <CheckCheck size={18} />
+          </Button>
+        </>
+      )}
     </li>
   );
 }

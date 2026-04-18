@@ -1,4 +1,4 @@
-import { Client } from "./client";
+import { Client } from './client';
 export type AllowedRideStatuses = 'PENDENTE' | 'CONFIRMADA' | 'CONCLUIDA' | 'CANCELADA';
 
 export interface Ride {
@@ -6,18 +6,18 @@ export interface Ride {
   client_id: number;
   origin: string;
   destination: string;
-  date_ride: Date; 
-  start_ride: number; 
+  date_ride: Date;
+  start_ride: number;
   end_ride: number;
   status: RideStatus;
   value: number;
   address: string;
   points_used: number | null;
-  created_at: Date; 
-  number_ride: string
+  created_at: Date;
+  number_ride: string;
 }
-export interface RideWithClient extends Ride{
-    client: Client
+export interface RideWithClient extends Ride {
+  client: Client;
 }
 export interface CreateRideDTO {
   origin: string;
@@ -28,9 +28,11 @@ export interface CreateRideDTO {
   client_phone: string;
   start_ride: string;
 }
-// export interface RideRoutes{
-
-// }
+export interface FinishRideParams {
+  id: number;
+  token: string;
+  data: { paymentMethod: string };
+}
 export interface RideSheduleSelectorProps {
   allShedules: SheduleDTO[];
   register: UseFormRegisterReturn;

@@ -9,9 +9,9 @@ interface InputProps {
   icon?: LucideIcon;
   placeholder?: string;
   register: UseFormRegisterReturn;
-  error: string | undefined
+  error: string | undefined;
 }
-export function Input({ label, type, register, icon: Icon, placeholder,error }: InputProps) {
+export function Input({ label, type, register, icon: Icon, placeholder, error }: InputProps) {
   return (
     <span className={`w-full flex flex-col gap-1 has-[input:focus]:text-amber-500 transition-all duration-200 ease-in`}>
       <label className={`${error ? 'text-red-500' : ''} flex items-center text-sm gap-2 px-1 transition-all duration-200 ease-in`}>
@@ -156,5 +156,22 @@ export function ContainerShedules({ shedules, register }: ContainerShedulesProps
         return <CardShedule key={s.slot} shedule={s} register={register} />;
       })}
     </ul>
+  );
+}
+interface InputRadioProps {
+  label: string;
+  icon?: LucideIcon;
+  register: UseFormRegisterReturn
+  value: string
+}
+export function InputRadio({ label, icon: Icon, register, value}: InputRadioProps) {
+  return (
+    <span className="relative bg-container has-[input:focus]:bg-[#f59e0b33]! has-[input:focus]:text-amber-500 flex p-4 rounded-xl">
+      <label htmlFor="" className="flex items-center gap-2">
+        {Icon && <Icon size={18} />}
+        {label}
+      </label>
+      <input value={value} type="radio" {...register} className="absolute opacity-0 w-full h-full" />
+    </span>
   );
 }
