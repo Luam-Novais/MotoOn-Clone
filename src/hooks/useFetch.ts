@@ -1,47 +1,40 @@
+import { useQuery } from '@tanstack/react-query';
+import { HttpRequestBuilder } from '@/src/utils/httpRequestBuilder';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-export function useFetch<T = unknown>(url: string, options: RequestInit) {
-  const [response, setResponse] = useState<Response | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<T | null>(null);
-  const router = useRouter();
+import { useGetToken } from '@/src/hooks/useGetToken';
+import { Payment } from '../types/payment';
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const response = await fetch(url, options);
-      const json = await response.json();
+const { adminRequests } = new HttpRequestBuilder();
+interface GetTotal {
+  total: number;
+}
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      if (response.status === 401) {
-        router.push('/login');
-        return;
-      }
-      if (response.ok) {
-        setResponse(response);
-        setData(json);
-      }
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-  useEffect(() => {
-    let isMounted = true;
-    fetchData();
+async function getRevenue(token: string, filter: string):Promise<GetTotal> {
+  const { url, options } = adminRequests.buildAdminGet(`payment/get-revenue?filter=${filter}`, token);
+  const response = await fetch(url, options);
+  const json = await response.json();
+  return json;
+}
+export function useRevenue(token: string, filter: string) {
+  const dataFetched = useQuery({
+    queryFn: () => getRevenue(token, filter),
+    queryKey: ['payment', filter],
+    enabled: !!token,
+  });
+  return dataFetched;
+}
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-  return {
-    response,
-    data,
-    loading,
-    error,
-  };
+async function getPayments(token: string, filter: string): Promise<Payment[]> {
+  const { url, options } = adminRequests.buildAdminGet(`payment/get?filter=${filter}`, token);
+  const response = await fetch(url, options);
+  const json = await response.json();
+  return json;
+}
+export function usePayments(token: string, filter: string) {
+  const dataFetched = useQuery({
+    queryFn: () => getPayments(token, filter),
+    queryKey: ['payment', filter],
+    enabled: !!token,
+  });
+  return dataFetched;
 }

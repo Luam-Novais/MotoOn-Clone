@@ -1,11 +1,12 @@
 import { Ride, RideWithClient } from '../types/ride';
 import { formatToCurrency, minutesToHoursFormated } from '../utils/functionsFormat';
-import { MapPin, Navigation, Clock10, CircleDot, Motorbike, Pencil, Trash, User, Map, CheckCheck, Phone } from 'lucide-react';
+import { MapPin, Navigation, Clock10, TriangleAlert, Trash,  CheckCheck, Phone, Calendar, CircleCheck } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
 import Image from 'next/image';
 import { Payment } from '../types/payment';
+import { useModal } from '../stores/useModalStore';
 
 export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
   return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
@@ -72,13 +73,13 @@ function RideRoute({ ride }: { ride: RideWithClient }) {
   );
 }
 
-type Props = {
+type CardRidesTodayProps = {
   ride: RideWithClient;
   index: number;
   onClick?: () => void;
 };
 
-export function CardRidesToday({ ride, index, onClick }: Props) {
+export function CardRidesToday({ ride, index, onClick }: CardRidesTodayProps) {
   const currentMinutes = new Date().getHours() * 60;
   const isFirst = index === 0;
 
@@ -193,32 +194,35 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
     </div>
   );
 }
-
-export function CardPayment({ payment }: { payment: Payment }) {
+interface CardPaymentProps {
+  payment: Payment;
+  onEdit: ()=> void
+  onDelete: ()=> void
+}
+export function CardPayment({ payment, onDelete }: CardPaymentProps) {
+  const formatDate = new Date(payment.payment_date).toLocaleDateString();
   return (
-    <div className="flex flex-col gap-4 bg-container px-2 py-4 rounded-xl border-l-4 border-amber-500 shadow-md shadow-black/50">
-      <div className="relative bg-dark p-2 rounded-xl grid grid-cols-[50px_2fr_1fr] justify-between items-start gap-3 shadow-md shadow-black/50">
-        <span className="relative p-3 flex w-fit justify-center rounded-full bg-container ">
-          <Motorbike color="#f59e0b" />
+    <div className="relative bg-container p-2 rounded-xl border-l-4 border-amber-500 shadow-md shadow-black/50 grid grid-cols-[2fr_50px] items-center justify-between">
+      <span className='absolute w-full h-0.5 bg-container -bottom-4'></span>
+      <div className="grid gap-1">
+        <span className="flex items-end gap-1">
+          <h2 className="text-2xl italic text-amber-500 font-bold">{formatToCurrency(payment.value)}</h2>
+          <p className="flex items-center justify-center uppercase text-[10px] bg-dark px-3 py-1 rounded-xl">{payment.payment_method}</p>
         </span>
-        <span>
-          <p className="text-xs text-[#ccc] uppercase">Corrida</p>
-          <p className="uppercase">{payment.number_ride}</p>
-          <span className="flex gap-2 items-start">
-            <p className="capitalize text-xs">{payment.payment_method}</p>
-            <p className="text-green-500 text-xs!">concluido</p>
-          </span>
+        <span className="flex gap-2">
+          <p className="flex items-center text-xs gap-1 text-[#ccc]">
+            <Calendar size={12} />
+            {formatDate}
+          </p>
+          <p className="flex items-center text-xs gap-1 text-green-500">
+            <CircleCheck size={12} />
+            concluido
+          </p>
         </span>
-        <p className="text-xl font-semibold italic justify-self-end">{formatToCurrency(payment.value)}</p>
       </div>
-      <span className="flex justify-between gap-2 min-w-full">
-        <button className="flex items-center gap-2 px-4 py-2 bg-dark rounded-xl shadow-md shadow-black/60 ">
-          editar
-          <Pencil size={18} color="#f59e0b" />
-        </button>
-        <button className="flex items-center gap-2 px-4 py-2 text-red-500 bg-dark rounded-xl shadow-md shadow-black/60 ">
-          excluir
-          <Trash size={16} />
+      <span>
+        <button className='bg-dark p-4 rounded-full' onClick={onDelete}>
+          <Trash size={18} color="#ef4444" />
         </button>
       </span>
     </div>

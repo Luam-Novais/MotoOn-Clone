@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { createRide, getRoutes, getSlots } from '@/src/service/client.services';
 import { isValideDate } from '@/src/utils/validateDate';
 import { Spinner } from '@/src/components/spinner';
+import { toast } from 'react-toastify';
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -53,13 +54,14 @@ export default function Page() {
         setLoading(true);
         const { response, json } = await createRide(data);
         if (!response.ok) throw new Error(json.messageError);
-        alert(json.message);
         const token = json.client_token;
         localStorage.setItem('client_token', token);
         reset();
+        toast.success(json.message);
       } catch (error: any) {
         setCountFormPage(1);
         setError(error.message);
+        toast.error(error.message);
       } finally {
         setLoading(false);
       }
@@ -71,7 +73,7 @@ export default function Page() {
   return (
     <div className="animate-appear py-6 px-4 flex flex-col gap-4 max-w-full">
       <span className="flex gap-3 items-center">
-        <Link href={'/ride'}>
+        <Link href={'/'}>
           <ArrowLeft size={30} />
         </Link>
         <Title className="font-bold">Para onde Vamos ?</Title>
