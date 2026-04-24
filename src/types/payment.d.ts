@@ -1,3 +1,5 @@
+import { Client } from "./client";
+
 export interface CreatePaymentDTO {
   payment_method: string;
   value: number;
@@ -15,4 +17,5 @@ export interface Payment extends CreatePaymentDTO {
   id: number;
   created_at: Date;
   ride?: Ride
+  client?: Client
 }

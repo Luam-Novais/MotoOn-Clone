@@ -6,29 +6,28 @@ import { CardClientViewRide, CardMotoboy } from '@/src/components/cards';
 import { Button } from '@/src/components/button';
 import Image from 'next/image';
 import { getRides } from '@/src/service/client.services';
-import { useState, useEffect } from 'react';
 import { RideWithClient } from '@/src/types/ride';
 import { Spinner } from '@/src/components/spinner';
-import { useGetToken } from '@/src/hooks/useGetToken';
+
 import { useQuery } from '@tanstack/react-query';
-import { Span } from 'next/dist/trace';
+
 import { useGetClientToken } from '@/src/hooks/useGetClientToken';
 
 export default function Page() {
   const tokenClient = useGetClientToken();
-  async function fetchRides(token: string): Promise<RideWithClient[] | undefined> {
-   if(token && token!== undefined){
-     const { response, json } = await getRides(token);
-     if (!response.ok) throw new Error(json.messageError);
 
-     return json;
+  async function fetchRides(token: string): Promise<RideWithClient[] | undefined> {
+    if (token && token !== undefined) {
+      const { response, json } = await getRides(token);
+      if (!response.ok) throw new Error(json.messageError);
+      return json;
     }
   }
 
   const ridesClient = useQuery({
     queryKey: ['rides-client'],
     queryFn: () => fetchRides(tokenClient as string),
-    enabled: !!tokenClient
+    enabled: !!tokenClient,
   });
   return (
     <section className="relative">

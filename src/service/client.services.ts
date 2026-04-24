@@ -38,5 +38,5 @@ export const getSlots = async (date_ride: Date) => {
 export const createRide = async (data: any) => {
   const { url, options } = httpReqBuilder.buildPost('ride/create', data);
   const { response, json } = await fetchJson(url, options);
-  return { response, json };
+  return json
 };

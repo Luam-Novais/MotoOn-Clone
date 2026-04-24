@@ -1,15 +1,27 @@
 import { Ride, RideWithClient } from '../types/ride';
-import { formatToCurrency, minutesToHoursFormated } from '../utils/functionsFormat';
-import { MapPin, Navigation, Clock10, TriangleAlert, Trash,  CheckCheck, Phone, Calendar, CircleCheck } from 'lucide-react';
+import { minutesToHoursFormated } from '../utils/functionsFormat';
+import { MapPin, Navigation, Clock10, CheckCheck, Phone, LucideIcon } from 'lucide-react';
 import { SheduleDTO } from '../types/ride';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from './button';
 import Image from 'next/image';
-import { Payment } from '../types/payment';
-import { useModal } from '../stores/useModalStore';
 
-export function ContainerCard({ children, style }: { children: React.ReactNode; style?: string }) {
-  return <div className={`bg-container p-2 rounded-md shadow-md shadow-black/50 border-l-2 border-amber-500 ${style}`}>{children}</div>;
+import React from 'react';
+
+export function ContainerCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={`bg-container p-2 rounded-xl shadow-md shadow-black/50 border-l-2 border-amber-500 ${className}`}>{children}</div>;
+}
+interface HighlightCardProps {
+  children: React.ReactNode;
+  icon?: LucideIcon;
+}
+export function HighlightCard({ children, icon: Icon }: HighlightCardProps) {
+  return (
+    <div className="p-4 relative flex flex-col justify-between gap-x-2 bg-linear-to-b from-amber-300 to-amber-600  min-h-40 rounded-xl  shadow-md shadow-black/50">
+      {children}
+      {Icon && <Icon className=" absolute opacity-25 top-5 right-5" size={120} color="#4A2C00" />}
+    </div>
+  );
 }
 
 function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) {
@@ -23,7 +35,7 @@ function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) 
         </span>
       </span>
 
-      <span className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <span className="flex gap-1 text-amber-500">
           <p className="font-medium">R$</p>
           <p className="text-4xl font-semibold italic">{ride.value.toFixed(2).replace('.', ',')}</p>
@@ -38,30 +50,23 @@ function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) 
             </span>
           </span>
         </span>
-      </span>
+      </div>
     </div>
   );
 }
 function RideRoute({ ride }: { ride: RideWithClient }) {
   return (
-    <div className="bg-[#1c1c1c] rounded-xl p-4 flex gap-4">
-      {/* Coluna dos ícones + linha */}
+    <div className="bg-dark rounded-xl p-4 flex gap-4">
       <div className="relative flex flex-col items-center">
-        {/* Bolinha origem */}
         <span className="w-3 h-3 rounded-full border-2 border-amber-400" />
-
-        {/* Linha */}
         <span className="w-0.5 flex-1 bg-[#333] my-1" />
-
-        {/* Bolinha destino */}
         <MapPin size={16} />
       </div>
-
-      {/* Conteúdo */}
-      <div className="flex flex-col justify-between gap-4">
+      <div className="flex flex-col justify-between gap-6">
         <div>
           <p className="text-xs tracking-widest text-[#888] uppercase">Origem</p>
           <p className="text-lg font-semibold text-[#eee] capitalize">{ride.origin}</p>
+          <p>({ride.address})</p>
         </div>
 
         <div>
@@ -80,7 +85,6 @@ type CardRidesTodayProps = {
 };
 
 export function CardRidesToday({ ride, index, onClick }: CardRidesTodayProps) {
-  const currentMinutes = new Date().getHours() * 60;
   const isFirst = index === 0;
 
   return (
@@ -100,7 +104,31 @@ export function CardRidesToday({ ride, index, onClick }: CardRidesTodayProps) {
     </li>
   );
 }
-
+export function CardRide({ ride, index }: CardRidesTodayProps) {
+  const statusRideStyle: Record<string, string> = {
+    PENDENTE: 'amber-500',
+    CONFIRMADA: 'green-500',
+    CONCLUIDA: 'green-500',
+    CANCELADA: 'red-500',
+  };
+  const date = new Date(ride.date_ride).toLocaleDateString();
+  return (
+    <ContainerCard>
+      <div className="grid gap-0.5">
+        <div className="flex justify-between">
+          <p className={`lowercase text-xs text-${statusRideStyle[ride.status]}`}>{ride.status}</p>
+          <span className="text-xs">
+            <p className="text-[#ccc]">{date}</p>
+            <p>{ride.number_ride}</p>
+          </span>
+        </div>
+        <div className="bg-dark p-2 rounded-xl">
+          <p className="capitalize">{ride.client.name}</p>
+        </div>
+      </div>
+    </ContainerCard>
+  );
+}
 export function CardShedule({ shedule, register }: { shedule: SheduleDTO; register: UseFormRegisterReturn }) {
   return (
     <li
@@ -191,40 +219,6 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
           </span>
         </div>
       </div>
-    </div>
-  );
-}
-interface CardPaymentProps {
-  payment: Payment;
-  onEdit: ()=> void
-  onDelete: ()=> void
-}
-export function CardPayment({ payment, onDelete }: CardPaymentProps) {
-  const formatDate = new Date(payment.payment_date).toLocaleDateString();
-  return (
-    <div className="relative bg-container p-2 rounded-xl border-l-4 border-amber-500 shadow-md shadow-black/50 grid grid-cols-[2fr_50px] items-center justify-between">
-      <span className='absolute w-full h-0.5 bg-container -bottom-4'></span>
-      <div className="grid gap-1">
-        <span className="flex items-end gap-1">
-          <h2 className="text-2xl italic text-amber-500 font-bold">{formatToCurrency(payment.value)}</h2>
-          <p className="flex items-center justify-center uppercase text-[10px] bg-dark px-3 py-1 rounded-xl">{payment.payment_method}</p>
-        </span>
-        <span className="flex gap-2">
-          <p className="flex items-center text-xs gap-1 text-[#ccc]">
-            <Calendar size={12} />
-            {formatDate}
-          </p>
-          <p className="flex items-center text-xs gap-1 text-green-500">
-            <CircleCheck size={12} />
-            concluido
-          </p>
-        </span>
-      </div>
-      <span>
-        <button className='bg-dark p-4 rounded-full' onClick={onDelete}>
-          <Trash size={18} color="#ef4444" />
-        </button>
-      </span>
     </div>
   );
 }

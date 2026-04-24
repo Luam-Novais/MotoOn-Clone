@@ -9,13 +9,26 @@ import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { SheduleDTO } from '@/src/types/ride';
 import { allowedRoutes } from '@/src/data/routes';
 import Link from 'next/link';
-import { createRide, getRoutes, getSlots } from '@/src/service/client.services';
+import { createRide, getSlots } from '@/src/service/client.services';
 import { isValideDate } from '@/src/utils/validateDate';
 import { Spinner } from '@/src/components/spinner';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Page() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const createRideMutation = useMutation({
+    mutationFn: (data: CreateRideDTO) => createRide(data),
+    mutationKey: ['rides'],
+    onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ['rides'] });
+      reset()
+    },
+    onError: (data) => {
+      toast.error(data.message);
+    },
+  });
   const [error, setError] = useState<string | null>(null);
   const [countFormPage, setCountFormPage] = useState<1 | 2>(1);
   const {
@@ -50,21 +63,7 @@ export default function Page() {
   }, [origin]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
     if (data.client_name && data.client_phone && data.date_ride && data.origin && data.destination && data.address && data.start_ride) {
-      try {
-        setLoading(true);
-        const { response, json } = await createRide(data);
-        if (!response.ok) throw new Error(json.messageError);
-        const token = json.client_token;
-        localStorage.setItem('client_token', token);
-        reset();
-        toast.success(json.message);
-      } catch (error: any) {
-        setCountFormPage(1);
-        setError(error.message);
-        toast.error(error.message);
-      } finally {
-        setLoading(false);
-      }
+      createRideMutation.mutate(data);
     } else {
       setCountFormPage(1);
       setError('Seus Dados estão incompletos, por favor verifique e tente novamente.');
@@ -83,7 +82,7 @@ export default function Page() {
         <p className={`count-page ${countFormPage === 1 ? 'count-page-active' : ''}`}>passo 1{countFormPage === 1 ? ': Informações' : ''}</p>
         <p className={`count-page ${countFormPage === 2 ? 'count-page-active' : ''}`}>passo 2{countFormPage === 2 ? ': Rotas' : ''} </p>
       </span>
-      {loading ? (
+      {createRideMutation.isPending ? (
         <Spinner />
       ) : (
         <>
@@ -183,7 +182,7 @@ export default function Page() {
                     </span>
                   </div>
                 )}
-                <Button type="submit" loadingState={loading}>
+                <Button type="submit" loadingState={createRideMutation.isPending}>
                   Criar Corrida <Motorbike />
                 </Button>
               </div>

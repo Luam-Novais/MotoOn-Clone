@@ -1,12 +1,15 @@
 'use client';
 import { Title } from '@/src/components/title';
-import { ContainerCard, CardRidesToday } from '@/src/components/cards';
+import { ContainerCard, CardRidesToday, HighlightCard } from '@/src/components/cards';
 import { Spinner, SpinnerWithButton } from '@/src/components/spinner';
 import { useState } from 'react';
 import { useRides } from '@/src/hooks/useRides';
 import { useGetToken } from '@/src/hooks/useGetToken';
 import { finishRideService } from '@/src/service/ride.services';
 import { FinishRideModal } from '@/src/components/modals';
+import { AlertCircle, CalendarOff, ChevronsRight, Gauge } from 'lucide-react';
+import Link from 'next/link';
+import { RideWithClient } from '@/src/types/ride';
 
 export default function Page() {
   const token = useGetToken();
@@ -16,8 +19,8 @@ export default function Page() {
   const [id_ride, setId_ride] = useState<number | null>(null);
   const totalPendingRides = pendingRides.data?.length ?? 0;
 
-  function HandleOpenModal(id:number) {
-    setId_ride(id)
+  function HandleOpenModal(id: number) {
+    setId_ride(id);
     setModalState(true);
   }
   function HandleCloseModal() {
@@ -25,36 +28,52 @@ export default function Page() {
   }
 
   return (
-    <section className=" p-4 flex flex-col gap-4 mb-28">
-      {modalState && <FinishRideModal token={token as string} modalState={modalState} setModalState={HandleCloseModal} id_ride={id_ride as number}/>}
-      <Title>Olá Arthur.</Title>
-      <div className="grid grid-cols-2 gap-4">
-        <ContainerCard style={'min-h-30 grid'}>
-          <p className="text-sm">Total de corridas hoje.</p>
-          <p className="text-4xl font-semibold italic text-amber-500 self-end p-2">{todayRides.isLoading ? <SpinnerWithButton /> : todayRides.data?.length}</p>
-        </ContainerCard>
-        <ContainerCard style={'min-h-30 grid relative'}>
+    <section className="p-4 grid gap-4 mb-40">
+      <section className="grid gap-4">
+        {modalState && <FinishRideModal token={token as string} modalState={modalState} setModalState={HandleCloseModal} id_ride={id_ride as number} />}
+        <Title>Olá Arthur.</Title>
+        <HighlightCard icon={AlertCircle}>
           {totalPendingRides > 0 && (
             <span className="absolute -top-1 -right-1 flex size-3">
               <span className="absolute inline-flex h-full  w-full  animate-ping rounded-full bg-amber-500 opacity-100"></span>
               <span className="inline-flex size-3 rounded-full bg-amber-500"></span>
             </span>
           )}
-          <p className="text-sm"> Corridas aguardando sua confimação.</p>
-          <p className="text-4xl font-semibold italic text-amber-500 self-end p-2">{pendingRides.isLoading ? <SpinnerWithButton /> : pendingRides.data?.length}</p>
+          <span className="grid gap-2">
+            <h2 className="text-2xl uppercase font-bold text-[#111]"> Corridas aguardando sua confimação.</h2>
+            <span className="text-black italic text-6xl font-bold">{pendingRides.isLoading ? <Spinner /> : pendingRides.data?.length}</span>
+          </span>
+          <Link
+            href={'/ride/pending-rides'}
+            className="flex w-fit gap-2 items-center p-4 bg-dark shadow-md 
+        shadow-amber-950 uppercase text-amber-500 rounded-xl font-bold italic self-end"
+          >
+            Ver pendentes
+            <ChevronsRight />
+          </Link>
+        </HighlightCard>
+        <ContainerCard className={'relative grid'}>
+          <p className="text-xl uppercase font-bold text-[#eee] z-50">Total de corridas hoje.</p>
+          <span className="text-5xl font-bold  text-amber-500 self-end p-2">{todayRides.isLoading ? <SpinnerWithButton /> : todayRides.data?.length}</span>
+          <Gauge className="absolute top-1 right-1 opacity-30 " size={80} color="#f59e0b" />
         </ContainerCard>
-      </div>
-      <div className="mt-8">
+      </section>
+      <section className="mt-8 grid gap-4">
+        <h3 className="text-2xl font-semibold">Corridas confirmadas para hoje.</h3>
         <div className="p-4 flex flex-col gap-5 bg-container rounded-md shadow-md shadow-black/50 ">
-          <h3 className="text-2xl">Corridas confirmadas para hoje.</h3>
-          {todayRides.data?.length === 0 && <span>Você ainda não tem corridas para hoje.</span>}
+          {todayRides.data?.length === 0 && (
+            <span className="flex flex-col gap-2 justify-between">
+              Você ainda não tem corridas confirmadas para hoje.
+              <CalendarOff size={80} className="opacity-20 self-center " />
+            </span>
+          )}
           <ul className="flex flex-col gap-8">
             {todayRides.data?.slice(0, 3).map((ride, index) => {
               return <CardRidesToday ride={ride} key={ride.id} index={index} onClick={() => HandleOpenModal(ride.id)} />;
             })}
           </ul>
         </div>
-      </div>
+      </section>
     </section>
   );
 }
