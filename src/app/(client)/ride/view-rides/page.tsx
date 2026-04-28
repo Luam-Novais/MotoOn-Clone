@@ -2,7 +2,8 @@
 import { ArrowLeft } from 'lucide-react';
 import { Title } from '@/src/components/title';
 import Link from 'next/link';
-import { CardClientViewRide, CardMotoboy } from '@/src/components/cards';
+import { CardClientViewRide } from '@/src/components/card.rides';
+import {  CardMotoboy } from '@/src/components/cards';
 import { Button } from '@/src/components/button';
 import Image from 'next/image';
 import { getRides } from '@/src/service/client.services';

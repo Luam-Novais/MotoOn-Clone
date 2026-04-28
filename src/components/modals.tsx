@@ -1,4 +1,5 @@
-import { CircleCheckBig, CircleDollarSign, Banknote, CreditCard, X, LucideIcon, TriangleAlert, Trash } from 'lucide-react';
+import { formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
+import { CircleCheckBig, CircleDollarSign, Banknote, CreditCard, X, LucideIcon, TriangleAlert, CheckCircle2, XCircle, User, MapPin, Clock3, Calendar } from 'lucide-react';
 import { InputRadio, Input } from './input';
 import { Button, ButtonFilter } from './button';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -8,10 +9,17 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import { Payment } from '../types/payment';
 import { Spinner } from './spinner';
+import { RideWithClient } from '../types/ride';
+import { updateStatusService } from '../service/ride.services';
+import { stat } from 'fs';
+
 export function ContainerModal({ children }: { children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 min-w-full w-full h-full bg-black/80 z-50 p-4 flex flex-col items-center justify-center">
-      <div className="animate-appear bg-dark w-full mt-8 rounded-xl shadow-xl shadow-black/50 flex overflow-y-scroll justify-center p-4">{children}</div>
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm">
+      <div className="animate-appear-down absolute bottom-0 left-0 right-0 rounded-t-3xl border-t border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
+        <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-zinc-700" />
+        {children}
+      </div>
     </div>
   );
 }
@@ -123,8 +131,98 @@ export function DeletePaymentModal({ data, onClose, token }: PaymentModalProps) 
           <button onClick={handleDelete} className="text-red-950 font-bold bg-linear-0 from-red-800 to-red-500 p-4 rounded-xl">
             Excluir
           </button>
-          <ButtonFilter type="button">Cancelar</ButtonFilter>
+          <ButtonFilter onClick={onClose} type="button">
+            Cancelar
+          </ButtonFilter>
         </div>
+      </div>
+    </ContainerModal>
+  );
+}
+
+type UpdatePendingRideModalProps = {
+  data: RideWithClient;
+  onClose: () => void;
+  token: string;
+};
+
+export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRideModalProps) {
+  const formatDate = new Date(data.date_ride).toLocaleDateString();
+  const queryClient = useQueryClient();
+
+  const updateMutate = useMutation({
+    mutationFn: (status: string) => updateStatusService({ id: data.id, token, data: { newStatus: status } }),
+    mutationKey: ['rides', 'pending-rides'],
+    onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ['rides', 'pending-rides'] });
+    },
+    onError: (data) => toast.error(data.message),
+  });
+  const handleUpdateStatus = (status: 'CONFIRMADA' | 'CANCELADA') => {
+    updateMutate.mutate(status);
+    onClose();
+  };
+
+  return (
+    <ContainerModal>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold text-zinc-100">Atualizar corrida</h2>
+
+          <p className="mt-1 text-sm text-zinc-500">#{data.number_ride}</p>
+        </div>
+
+        <button onClick={onClose} className="rounded-xl p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
+          <X size={22} />
+        </button>
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 space-y-3">
+        <div className="flex items-center gap-2 text-sm text-zinc-300">
+          <User size={16} className="text-zinc-500" />
+          {data.client.name}
+        </div>
+
+        <div className="flex items-start gap-2 text-sm text-zinc-300">
+          <MapPin size={16} className="mt-0.5 text-amber-400 shrink-0" />
+          <div>
+            <p>{normalizeTextLabel(data.origin)}</p>
+            <p className="text-zinc-500">→ {normalizeTextLabel(data.destination)}</p>
+          </div>
+        </div>
+
+        <div className="flex items-end justify-between pt-1">
+          <div className="">
+            <div className="flex items-center gap-2 text-sm text-zinc-400">
+              <Calendar size={15} />
+              {formatDate}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-zinc-400">
+              <Clock3 size={15} />
+              {minutesToHoursFormated(data.start_ride)}
+            </div>
+          </div>
+
+          <span className="text-lg font-bold text-amber-400">{formatToCurrency(data.value)}</span>
+        </div>
+      </div>
+
+      {/* ações */}
+      <div className="mt-5 space-y-3">
+        <button onClick={() => handleUpdateStatus('CONFIRMADA')} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-4 font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.99]">
+          <CheckCircle2 size={20} />
+          Aceitar corrida
+        </button>
+
+        <button onClick={() => handleUpdateStatus('CANCELADA')} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 font-semibold text-red-400 transition hover:bg-red-500/15 active:scale-[0.99]">
+          <XCircle size={20} />
+          Recusar corrida
+        </button>
+
+        <button onClick={onClose} className="w-full py-3 text-sm text-zinc-500 transition hover:text-zinc-300">
+          Fechar
+        </button>
       </div>
     </ContainerModal>
   );

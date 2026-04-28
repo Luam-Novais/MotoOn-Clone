@@ -1,4 +1,4 @@
-import { FinishRideParams } from "../types/ride";
+import { RideRequestParams } from "../types/ride";
 
 export class HttpRequestBuilder {
   private baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -43,7 +43,7 @@ export class HttpRequestBuilder {
       };
       return { url, options };
     },
-    buildAdminPost: (pathname: string, token:string, data: any) => {
+    buildAdminPost: (pathname: string, token: string, data: any) => {
       const url = this.baseUrl + pathname;
       const options = {
         method: 'POST',
@@ -67,7 +67,7 @@ export class HttpRequestBuilder {
       };
       return { url, options };
     },
-       buildAdminDel: (pathname: string, token: string) => {
+    buildAdminDel: (pathname: string, token: string) => {
       const url = this.baseUrl + pathname;
       const options = {
         method: 'DELETE',
@@ -78,10 +78,22 @@ export class HttpRequestBuilder {
       return { url, options };
     },
   };
-  
+
   ridesRequest = {
-    buildFinishRequest: ({ id, token, data }: FinishRideParams) => {
+    buildFinishRequest: ({ id, token, data }: RideRequestParams) => {
       const url = `${this.baseUrl}ride/finish-ride/${id}`;
+      const options = {
+        method: 'PUT',
+        headers: {
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+      return { url, options };
+    },
+    buildUpdateStatusRequest: ({ id, token, data }: RideRequestParams) => {
+      const url = `${this.baseUrl}ride/update/${id}`;
       const options = {
         method: 'PUT',
         headers: {

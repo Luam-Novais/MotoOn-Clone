@@ -1,9 +1,8 @@
 'use client';
 import { Title } from '@/src/components/title';
-import { Button, ButtonFilter } from '@/src/components/button';
 import { Plus, CalendarCheck, CircleDollarSign, ListFilter, BanknoteX } from 'lucide-react';
 import { Payment } from '@/src/types/payment';
-import { CardPayment } from '@/src/components/cards.payment';
+import { PaymentCard } from '@/src/components/cards.payment';
 import { HighlightCard } from '@/src/components/cards';
 import { formatToCurrency } from '@/src/utils/functionsFormat';
 import { usePayments, useRevenue } from '@/src/hooks/useFetch';
@@ -49,22 +48,21 @@ export default function Page() {
       <div className="flex relative flex-col gap-8 animate-appear mb-40">
         <section className="flex relative flex-col gap-4">
           <HighlightCard icon={CircleDollarSign}>
-            <p className="text-amber-950 text-xs font-semibold uppercase">faturamento de hoje</p>
+            <p className="text-amber-950 uppercase text-xl  font-semibold">faturamento de hoje</p>
             {todayRevenue.isLoading ? <Spinner /> : <h2 className="text-6xl font-bold italic text-[#111]">{formatToCurrency(todayRevenue.data ? todayRevenue.data.total : 0)}</h2>}
           </HighlightCard>
-          <span className="shadow-md shadow-black/50 rounded-xl">
-            <span
-              className="relative flex flex-col justify-between gap-x-2 bg-container p-4 h-28 rounded-xl  
-                  drop-shadow-black shadow-inner! shadow-[#333]!"
-            >
-              <CalendarCheck size={50} className="absolute right-2 top-2 opacity-15" />
-              <p className="text-xs text-[#ccc] font-semibold uppercase">ultimos 30 dias</p>
-              <h2 className="flex gap-2 text-4xl font-extrabold italic ">
-                {formatToCurrency(monthRevenue.data ? monthRevenue.data.total : 0)}
-                <span className="text-[#ccc] self-end text-xs uppercase ">agregado</span>
-              </h2>
+          <div className="shadow-xl shadow-black/50 rounded-xl p-4 bg-container grid gap-4">
+            <span className="w-fit bg-amber-500/30 p-2 flex items-center justify-center rounded-md shadow shadow-black/30">
+              <CalendarCheck size={35} color="#f59e0b" />
             </span>
-          </span>
+            <div>
+              <h3 className="uppercase text-base text-[#FFE3B4bb]">Últimos 30 dias</h3>
+              <h2 className="flex gap-2 text-4xl font-bold">
+                {formatToCurrency(monthRevenue.data ? monthRevenue.data.total : 0)}
+                <span className="text-[#ccc] self-end text-xs">agregado</span>
+              </h2>
+            </div>
+          </div>
         </section>
         <section className="flex flex-col gap-6">
           <span>
@@ -88,7 +86,7 @@ export default function Page() {
             <ul className="flex flex-col gap-8">
               {payments.isLoading && <Spinner />}
               {payments.data?.map((p, i) => {
-                return <CardPayment key={p.id} payment={p} index={i} onDelete={() => setModal({ type: 'delete', data: p })} />;
+                return <PaymentCard key={p.id} payment={p} index={i} onDelete={() => setModal({ type: 'delete', data: p })} />;
               })}
             </ul>
           </div>

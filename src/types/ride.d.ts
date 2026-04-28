@@ -28,10 +28,10 @@ export interface CreateRideDTO {
   client_phone: string;
   start_ride: string;
 }
-export interface FinishRideParams {
+export interface RideRequestParams {
   id: number;
   token: string;
-  data: { paymentMethod: string };
+  data: { paymentMethod: string } | {newStatus: string};
 }
 export interface RideSheduleSelectorProps {
   allShedules: SheduleDTO[];

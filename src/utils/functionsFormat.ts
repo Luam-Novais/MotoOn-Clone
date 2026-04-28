@@ -10,3 +10,6 @@ export function formatToCurrency(value: number){
     currency: 'BRL',
   }).format(value);
 }
+export function normalizeTextLabel(value:string): string{
+  return value.replaceAll('_', " ")
+}

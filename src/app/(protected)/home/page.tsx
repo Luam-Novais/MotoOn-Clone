@@ -1,6 +1,7 @@
 'use client';
 import { Title } from '@/src/components/title';
-import { ContainerCard, CardRidesToday, HighlightCard } from '@/src/components/cards';
+import { ContainerCard, HighlightCard } from '@/src/components/cards';
+import { CardRidesToday } from '@/src/components/card.rides';
 import { Spinner, SpinnerWithButton } from '@/src/components/spinner';
 import { useState } from 'react';
 import { useRides } from '@/src/hooks/useRides';
