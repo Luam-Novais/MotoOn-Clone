@@ -114,12 +114,12 @@ export function CardRide({ ride, index }: CardRidesTodayProps) {
 export function CardClientViewRide({ ride, index }: { ride: Ride; index: number }) {
   const statusRideStyle: Record<string, string> = {
     PENDENTE: 'amber-500',
-    CONFIRMADA: 'green-500',
-    CONCLUIDA: 'green-500',
+    CONFIRMADA: 'green-500 ',
+    CONCLUIDA: 'green-500 ',
     CANCELADA: 'red-500',
   };
   return (
-    <div className={`bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2  ${index > 0 ? 'opacity-30' : ''}`}>
+    <div className={`bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2`}>
       <div className="flex flex-col gap-8 p-4">
         <div className="flex justify-between items-start">
           <span className="flex flex-col gap-1.5">
