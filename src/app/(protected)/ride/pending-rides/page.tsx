@@ -7,7 +7,6 @@ import { useRides } from '@/src/hooks/useRides';
 import { RideWithClient } from '@/src/types/ride';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Page() {

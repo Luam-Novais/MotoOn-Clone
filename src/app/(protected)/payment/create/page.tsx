@@ -3,23 +3,14 @@ import { Title } from '@/src/components/title';
 import { CreatePaymentDTO } from '@/src/types/payment';
 import { Input, InputRadio } from '@/src/components/input';
 import { Button } from '@/src/components/button';
-import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { CircleDollarSign, Banknote, CreditCard } from 'lucide-react';
-import { HttpRequestBuilder } from '@/src/utils/httpRequestBuilder';
+import { CircleDollarSign, Banknote, CreditCard, ArrowLeft } from 'lucide-react';
+import { createPayment } from '@/src/service/payment.services';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetToken } from '@/src/hooks/useGetToken';
 import { toast } from 'react-toastify';
 
-const { adminRequests } = new HttpRequestBuilder();
-
-async function createPayment(data: CreatePaymentDTO, token: string) {
-  const { url, options } = adminRequests.buildAdminPost('payment/create', token, data);
-  const response = await fetch(url, options);
-  const json = await response.json();
-  return json;
-}
 
 export default function Page() {
   const token = useGetToken();

@@ -54,7 +54,7 @@ export default function Page() {
           </Link>
         </HighlightCard>
         <ContainerCard className={'relative grid'}>
-          <p className="text-xl uppercase font-bold text-[#eee] z-50">Total de corridas hoje.</p>
+          <p className="text-xl uppercase font-bold text-[#eee] z-30">Total de corridas hoje.</p>
           <span className="text-5xl font-bold  text-amber-500 self-end p-2">{todayRides.isLoading ? <SpinnerWithButton /> : todayRides.data?.length}</span>
           <Gauge className="absolute top-1 right-1 opacity-30 " size={80} color="#f59e0b" />
         </ContainerCard>

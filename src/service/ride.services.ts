@@ -6,7 +6,9 @@ const { ridesRequest, clientRequests } = new HttpRequestBuilder();
 
 export async function finishRideService({ id, token, data }: RideRequestParams) {
   const { url, options } = ridesRequest.buildFinishRequest({ id, token, data });
-  console.log(url, options);
+  const res = await fetch(url, options);
+  const json = await res.json();
+  return json;
 }
 
 export async function updateStatusService({ id, token, data }: RideRequestParams) {

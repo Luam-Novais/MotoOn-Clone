@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { Spinner } from '@/src/components/spinner';
 import Link from 'next/link';
 import { DeletePaymentModal } from '@/src/components/modals';
-import { useModal } from '@/src/stores/useModalStore';
 import { InputRadio } from '@/src/components/input';
 import { useForm } from 'react-hook-form';
 

@@ -10,15 +10,18 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Payment } from '../types/payment';
 import { Spinner } from './spinner';
 import { RideWithClient } from '../types/ride';
-import { updateStatusService } from '../service/ride.services';
-import { stat } from 'fs';
+import { finishRideService, updateStatusService } from '../service/ride.services';
+import { deletePayment } from '../service/payment.services';
 
-export function ContainerModal({ children }: { children: React.ReactNode }) {
+export function ContainerModal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm">
       <div className="animate-appear-down absolute bottom-0 left-0 right-0 rounded-t-3xl border-t border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
         <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-zinc-700" />
         {children}
+        <button onClick={onClose} className="w-full py-3 text-sm text-zinc-500 transition hover:text-zinc-300">
+          Fechar
+        </button>
       </div>
     </div>
   );
@@ -55,13 +58,9 @@ const httpReqBuilder = new HttpRequestBuilder();
 export function FinishRideModal({ token, setModalState, id_ride }: FinishRideModalProps) {
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm<FinishRideDTO>();
+
   const finishRide = useMutation({
-    mutationFn: async (data: FinishRideDTO) => {
-      const { url, options } = httpReqBuilder.ridesRequest.buildFinishRequest({ id: id_ride, token, data });
-      const res = await fetch(url, options);
-      const json = await res.json();
-      return json;
-    },
+    mutationFn: async (data: FinishRideDTO) => finishRideService({ id: id_ride, token, data }),
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['rides'] });
@@ -76,7 +75,7 @@ export function FinishRideModal({ token, setModalState, id_ride }: FinishRideMod
     finishRide.mutate(data);
   };
   return (
-    <ContainerModal>
+    <ContainerModal onClose={setModalState}>
       <div className="relative min-w-full w-full p-4 flex flex-col gap-4 items-center">
         <HeaderModal colorIcon="#22c55e" handleClose={setModalState} icon={CircleCheckBig} desc={'Selecione a forma de pagamento'} />
         <div className="grid gap-4 w-full">
@@ -84,7 +83,7 @@ export function FinishRideModal({ token, setModalState, id_ride }: FinishRideMod
             <InputRadio icon={CircleDollarSign} value="pix" register={register('paymentMethod')} label="Pix" />
             <InputRadio icon={Banknote} value="dinheiro" register={register('paymentMethod')} label="Dinheiro" />
             <InputRadio icon={CreditCard} value="cartao" register={register('paymentMethod')} label="Cartão" />
-            <Button className="mt-4" type="submit">
+            <Button className="mt-4" type="submit" loadingState={finishRide.isPending} disabled={finishRide.isPending}>
               Finalizar Corrida
             </Button>
           </form>
@@ -98,12 +97,7 @@ interface PaymentModalProps {
   onClose: () => void;
   token: string;
 }
-async function deletePayment(id: number, token: string) {
-  const { url, options } = httpReqBuilder.adminRequests.buildAdminDel(`payment/delete/${id}`, token);
-  const response = await fetch(url, options);
-  const json = await response.json();
-  return json;
-}
+
 export function DeletePaymentModal({ data, onClose, token }: PaymentModalProps) {
   const queryClient = useQueryClient();
 
@@ -124,7 +118,7 @@ export function DeletePaymentModal({ data, onClose, token }: PaymentModalProps) 
   }
   if (isPending) return <Spinner />;
   return (
-    <ContainerModal>
+    <ContainerModal onClose={onClose}>
       <div className="flex w-full flex-col gap-8">
         <HeaderModal icon={TriangleAlert} colorIcon="#ef4444" desc="Essa ação não poderá ser desfeita." handleClose={onClose} />
         <div className="grid gap-2">
@@ -165,7 +159,7 @@ export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRi
   };
 
   return (
-    <ContainerModal>
+    <ContainerModal onClose={onClose}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-semibold text-zinc-100">Atualizar corrida</h2>
@@ -218,10 +212,6 @@ export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRi
         <button onClick={() => handleUpdateStatus('CANCELADA')} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 font-semibold text-red-400 transition hover:bg-red-500/15 active:scale-[0.99]">
           <XCircle size={20} />
           Recusar corrida
-        </button>
-
-        <button onClick={onClose} className="w-full py-3 text-sm text-zinc-500 transition hover:text-zinc-300">
-          Fechar
         </button>
       </div>
     </ContainerModal>

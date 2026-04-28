@@ -92,14 +92,14 @@ export function CardRide({ ride, index }: CardRidesTodayProps) {
     CONCLUIDA: 'green-500',
     CANCELADA: 'red-500',
   };
-  const date = new Date(ride.date_ride).toLocaleDateString();
+
   return (
     <ContainerCard>
       <div className="grid gap-0.5">
         <div className="flex justify-between">
           <p className={`lowercase text-xs text-${statusRideStyle[ride.status]}`}>{ride.status}</p>
           <span className="text-xs">
-            <p className="text-zinc-400">{date}</p>
+            <p className="text-zinc-400">{formatDate(ride.date_ride)}</p>
             <p>{ride.number_ride}</p>
           </span>
         </div>
@@ -130,7 +130,7 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
               </span>
               <h2 className="text-2xl font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
             </span>
-          <div className="my-2 h-px bg-zinc-800" />
+            <div className="my-2 h-px bg-zinc-800" />
 
             <span>
               <span className="text-sm text-zinc-400 flex items-center gap-1">
@@ -198,7 +198,6 @@ export function CardViewPendingRidesEmpty() {
 type PendingRidesCardProps = { totalPending?: number; estimatedValue?: number; onViewPending?: () => void };
 
 export function PendingViewRidesCard({ totalPending, estimatedValue = 0, onViewPending }: PendingRidesCardProps) {
-  const formattedValue = estimatedValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   return (
     <div className="relative overflow-hidden rounded-xl border border-amber-500 bg-zinc-900 p-5 shadow-[0_0_30px_rgba(245,158,11,0.12)]">
       <div className="absolute inset-0" />
@@ -227,7 +226,7 @@ export function PendingViewRidesCard({ totalPending, estimatedValue = 0, onViewP
             <Wallet size={20} />
           </div>
           <div>
-            <p className="text-sm text-zinc-400"> Valor total estimado </p> <strong className="mt-1 block text-3xl font-bold text-amber-400"> {formattedValue} </strong>
+            <p className="text-sm text-zinc-400"> Valor total estimado </p> <strong className="mt-1 block text-3xl font-bold text-amber-400"> {formatToCurrency(estimatedValue)} </strong>
           </div>
         </div>
         <Link href={'/ride/pending-rides'} className="p-4 shadow-xl rounded-xl justify-center items-center flex gap-4 text-[1.125rem] font-semibold bg-linear-to-b text-amber-950 from-amber-300 to-amber-600 ">
@@ -263,12 +262,7 @@ export function CompactPendingViewCard({ totalPending, estimatedValue = 0, onVie
   );
 }
 
-export function PendingRideCard({ ride, onClick }: { ride: RideWithClient, onClick: ()=> void }) {
-  const formatDate = new Date(ride.date_ride).toLocaleDateString();
-  // function onClick(){
-  //   console.log(ride.id)
-  // }
-
+export function PendingRideCard({ ride, onClick }: { ride: RideWithClient; onClick: () => void }) {
   return (
     <div className="grid gap-4 w-full rounded-2xl border border-zinc-800 bg-zinc-900 p-4 shadow-md">
       {/* topo */}
@@ -276,7 +270,7 @@ export function PendingRideCard({ ride, onClick }: { ride: RideWithClient, onCli
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-zinc-200 text-base">
             <CalendarDays size={14} />
-            <span>{formatDate}</span>
+            <span>{formatDate(ride.date_ride)}</span>
           </div>
 
           <div className="flex items-center gap-2 text-zinc-200 text-xl">
