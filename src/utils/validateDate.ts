@@ -1,8 +1,9 @@
-export function isValideDate(value: any): string | true {
+export function isValideDate(value: any): boolean {
     const currentDate = new Date()
     const date = new Date(value)
 
-    if(date < currentDate) return 'Data não pode ser no passado.';
-    else if(!isNaN(date.getTime())) return 'Data inválida';
+    if(date < currentDate) return false
+    ;
+    else if(isNaN(date.getTime())) return false;
     return true
 }

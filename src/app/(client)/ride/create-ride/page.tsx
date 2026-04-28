@@ -21,10 +21,10 @@ export default function Page() {
     mutationFn: (data: CreateRideDTO) => createRide(data),
     mutationKey: ['rides'],
     onSuccess: (data) => {
-      localStorage.setItem('client_token', data.client_token)
+      localStorage.setItem('client_token', data.client_token);
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      reset()
+      reset();
     },
     onError: (data) => {
       toast.error(data.message);
@@ -122,9 +122,7 @@ export default function Page() {
                   type="date"
                   register={register('date_ride', {
                     required: 'Data inválida.',
-                    validate: (value) => {
-                      isValideDate(value);
-                    },
+                    validate: (value) => isValideDate(value),
                   })}
                 />
                 {slots && (
