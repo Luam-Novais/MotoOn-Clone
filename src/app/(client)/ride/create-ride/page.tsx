@@ -21,6 +21,7 @@ export default function Page() {
     mutationFn: (data: CreateRideDTO) => createRide(data),
     mutationKey: ['rides'],
     onSuccess: (data) => {
+      localStorage.setItem('client_token', data.client_token)
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['rides'] });
       reset()

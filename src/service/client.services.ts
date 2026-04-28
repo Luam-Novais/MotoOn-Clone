@@ -21,15 +21,7 @@ export const getRoutes = async () => {
     json,
   };
 };
-export const getRides = async (token: string) => {
-  const { url, options } = httpReqBuilder.clientRequests.buildGetWithToken(`ride/client-rides`, token);
-  const { response, json } = await fetchJson(url, options);
 
-  return {
-    response,
-    json,
-  };
-};
 export const getSlots = async (date_ride: Date) => {
   const { url, options } = httpReqBuilder.buildGet(`ride/get-slots?date_ride=${date_ride}`);
   const { response, json } = await fetchJson(url, options as RequestInit);
@@ -38,5 +30,6 @@ export const getSlots = async (date_ride: Date) => {
 export const createRide = async (data: any) => {
   const { url, options } = httpReqBuilder.buildPost('ride/create', data);
   const { response, json } = await fetchJson(url, options);
+  if(!response.ok) throw new Error(json.messageError)
   return json
 };

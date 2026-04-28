@@ -1,7 +1,7 @@
-import { CalendarDays, MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon } from 'lucide-react';
+import { CalendarDays, MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { Ride, RideWithClient } from '../types/ride';
-import { formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
+import { formatDate, formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
 import { ContainerCard } from './cards';
 import { Button } from './button';
 
@@ -9,7 +9,7 @@ function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) 
   return (
     <div className={`relative flex items-start justify-between border-b-2 border-[#222] pb-3 ${muted ? 'opacity-50' : ''}`}>
       <span className="flex flex-col">
-        <p className="text-xs text-[#ccc]">cliente</p>
+        <p className="text-xs text-zinc-400">cliente</p>
         <p className="text-xl font-semibold capitalize">{ride.client.name.split(' ')[0]}</p>
         <span className="flex items-center gap-2 text-[#ddd] text-base">
           {ride.client.phone} <Phone size={16} />
@@ -99,7 +99,7 @@ export function CardRide({ ride, index }: CardRidesTodayProps) {
         <div className="flex justify-between">
           <p className={`lowercase text-xs text-${statusRideStyle[ride.status]}`}>{ride.status}</p>
           <span className="text-xs">
-            <p className="text-[#ccc]">{date}</p>
+            <p className="text-zinc-400">{date}</p>
             <p>{ride.number_ride}</p>
           </span>
         </div>
@@ -121,36 +121,51 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
   return (
     <div className={`bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2  ${index > 0 ? 'opacity-30' : ''}`}>
       <div className="flex flex-col gap-8 p-4">
-        <span className="flex justify-between items-center">
+        <div className="flex justify-between items-start">
           <span className="flex flex-col gap-1.5">
-            <p className="text-sm text-[#ccc]">horário</p>
-            <h2 className="text-4xl font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
+            <span>
+              <span className="text-sm text-zinc-400 flex items-center gap-1">
+                <Clock3 size={14} />
+                horário
+              </span>
+              <h2 className="text-2xl font-bold ">{minutesToHoursFormated(ride.start_ride)}</h2>
+            </span>
+          <div className="my-2 h-px bg-zinc-800" />
+
+            <span>
+              <span className="text-sm text-zinc-400 flex items-center gap-1">
+                <Calendar size={14} />
+                data
+              </span>
+              <h2 className="text-xl font-bold ">{formatDate(ride.date_ride)}</h2>
+            </span>
           </span>
           <span className="flex flex-col gap-1.5">
-            <p className="text-xs text-[#ccc]">status atual</p>
+            <p className="text-xs text-zinc-400">status atual</p>
             <p className={`text-xs text-${statusRideStyle[ride.status]} border border-${statusRideStyle[ride.status]} rounded-xl p-2`}>{ride.status}</p>
           </span>
-        </span>
+        </div>
         <div className="flex flex-col gap-4 bg-dark p-4 rounded-xl">
-          <p className="text-xs text-[#ccc]">locais</p>
+          <p className="text-xs text-zinc-400">locais</p>
 
-          <span className="flex items-center gap-2 relative after-line w-full">
+          <span className="flex items-center gap-2 relative w-full">
             <MapPin size={14} color="#FFE3B4bb" />
             <span className="">
-              <p className="text-xs text-[#ccc]">Saindo de</p>
+              <p className="text-xs text-zinc-400">Saindo de</p>
               <p className="capitalize font-medium">{normalizeTextLabel(ride.origin)}</p>
             </span>
           </span>
-          <span className="flex gap-2 items-center relative after-line ">
+          <div className="my-5 h-px bg-zinc-800" />
+          <span className="flex gap-2 items-center relative">
             <Navigation size={14} color="#FFE3B4bb" />
             <span>
-              <p className="text-xs text-[#ccc]">Indo para</p>
+              <p className="text-xs text-zinc-400">Indo para</p>
               <p className="capitalize text-[1.125rem] font-semibold">{normalizeTextLabel(ride.destination)}</p>
             </span>
           </span>
           <span className="flex gap-2 items-center mt-4 ">
             <span>
-              <p className="text-xs text-[#ccc]">Ponto de referência</p>
+              <p className="text-xs text-zinc-400">Ponto de referência</p>
               <p className="capitalize ">{ride.address}</p>
             </span>
           </span>
@@ -166,7 +181,7 @@ export function CardViewPendingRidesEmpty() {
       <span className="flex justify-between items-center bg-dark p-4 rounded-xl shadow-md shadow-black/30">
         <span>
           <h2 className="uppercase text-2xl font-bold italic ">Pendentes</h2>
-          <p className="text-sm text-[#ccc]">Gerencie suas corridas pedentes.</p>
+          <p className="text-sm text-zinc-400">Gerencie suas corridas pedentes.</p>
         </span>
         <span className="bg-amber-500 p-2 flex items-center justify-center rounded-full">
           <ClipboardList size={35} color="#111" />
@@ -174,7 +189,7 @@ export function CardViewPendingRidesEmpty() {
       </span>
       <div className=" p-4 flex flex-col gap-4 items-center justify-center">
         <ClipboardCheck size={150} className="opacity-40" />
-        <p className="text-[#ccc]">Você está em dia! Novas solicitações de corridas aparecerão aqui em tempo real.</p>
+        <p className="text-zinc-400">Você está em dia! Novas solicitações de corridas aparecerão aqui em tempo real.</p>
       </div>
     </div>
   );

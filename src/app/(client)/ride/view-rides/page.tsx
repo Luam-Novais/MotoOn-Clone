@@ -3,31 +3,20 @@ import { ArrowLeft } from 'lucide-react';
 import { Title } from '@/src/components/title';
 import Link from 'next/link';
 import { CardClientViewRide } from '@/src/components/card.rides';
-import {  CardMotoboy } from '@/src/components/cards';
+import { CardMotoboy } from '@/src/components/cards';
 import { Button } from '@/src/components/button';
 import Image from 'next/image';
-import { getRides } from '@/src/service/client.services';
-import { RideWithClient } from '@/src/types/ride';
 import { Spinner } from '@/src/components/spinner';
-
 import { useQuery } from '@tanstack/react-query';
-
 import { useGetClientToken } from '@/src/hooks/useGetClientToken';
+import { getClientRidesService } from '@/src/service/ride.services';
 
 export default function Page() {
   const tokenClient = useGetClientToken();
 
-  async function fetchRides(token: string): Promise<RideWithClient[] | undefined> {
-    if (token && token !== undefined) {
-      const { response, json } = await getRides(token);
-      if (!response.ok) throw new Error(json.messageError);
-      return json;
-    }
-  }
-
   const ridesClient = useQuery({
     queryKey: ['rides-client'],
-    queryFn: () => fetchRides(tokenClient as string),
+    queryFn: () => getClientRidesService(tokenClient as string),
     enabled: !!tokenClient,
   });
   return (
@@ -49,7 +38,7 @@ export default function Page() {
             {ridesClient.isError && <span>Ocorreu um erro ao buscar as suas corridas.</span>}
             {ridesClient.data && ridesClient.data?.length > 0 ? (
               <>
-                <h1>Você tem {ridesClient.data?.length} corridas confirmada para hoje.</h1>
+                <h1>Você tem {ridesClient.data?.length} corridas agendadas.</h1>
                 <ul className="flex flex-col gap-4">
                   {ridesClient.data?.map((r, i) => {
                     return (
@@ -61,7 +50,7 @@ export default function Page() {
                 </ul>
               </>
             ) : (
-              <h1>Você não possui corridas para hoje.</h1>
+              <h1>Você não possui corridas agendadas.</h1>
             )}
           </div>
         </div>

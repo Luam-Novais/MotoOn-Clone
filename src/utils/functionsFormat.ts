@@ -10,6 +10,9 @@ export function formatToCurrency(value: number){
     currency: 'BRL',
   }).format(value);
 }
-export function normalizeTextLabel(value:string): string{
+export function normalizeTextLabel(value:string ): string{
   return value.replaceAll('_', " ")
+}
+export function formatDate(date:string | Date){
+  return new Date(date).toLocaleDateString()
 }
