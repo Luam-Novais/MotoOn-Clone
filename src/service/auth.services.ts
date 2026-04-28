@@ -15,16 +15,10 @@ export const fetchJson = async (url: string, options: RequestInit) => {
 
 export async function loginService(data: Credentials) {
   const { url, options } = httpReqBuilder.buildPost('auth/login', data);
-  const { response, json } = await fetchJson(url, options as RequestInit);
-
-  return { response, json };
+  const response = await fetch(url, options);
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(json.messageError || 'Erro no login');
+  }
+  return json;
 }
-// export async function getTodayRevenueService() {
-//   const { url, options } = httpReqBuilder.adminRequests.buildAdminGet('payment/get-today-revenue');
-//   const { response, json } = await fetchJson(url, options);
-
-//   return {
-//     response,
-//     json,
-//   };
-// }

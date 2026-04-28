@@ -8,9 +8,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Credentials } from '@/src/types/auth';
 import { loginService } from '@/src/service/auth.services';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 export default function Page() {
-  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const [errorResponse, setErrorResponse] = useState<string | null>(null);
   const {
@@ -19,23 +20,22 @@ export default function Page() {
     formState: { errors },
   } = useForm<Credentials>();
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data:Credentials) => loginService(data),
+    mutationKey: ['auth'],
+    onSuccess: (data) => {
+      setErrorResponse(null);
+      localStorage.setItem('access_token', data.accessToken);
+      router.push('/home');
+    },
+    onError: (data) => {
+      setErrorResponse(data.message);
+      toast.error(data.message);
+    },
+  });
+
   const onSubmit: SubmitHandler<Credentials> = async (data) => {
-    try {
-      setLoading(true);
-      const { response, json } = await loginService(data);
-      if (response.ok) {
-        setErrorResponse(null);
-        localStorage.setItem('access_token', json.accessToken);
-        router.push('/home');
-      } else {
-        throw new Error(json.messageError);
-      }
-    } catch (error: any) {
-      console.error(error.message);
-      setErrorResponse(error.message);
-    } finally {
-      setLoading(false);
-    }
+    mutate(data);
   };
   return (
     <div className="z-50 relative before-dot after-dot backdrop-blur-2xl ">
@@ -67,7 +67,7 @@ export default function Page() {
               })}
             />
           </div>
-          <Button type="submit" loadingState={loading} className="uppercase" disabled={loading}>
+          <Button type="submit" loadingState={isPending} className="uppercase" disabled={isPending}>
             Entrar
             <ChevronsRight />
           </Button>
