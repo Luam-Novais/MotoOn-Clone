@@ -14,6 +14,7 @@ export function useRides(filter: string) {
       ...options,
       headers: {
         authorization: `Bearer ${token}`,
+        'ngrok-skip-browser-warning': 'true',
       },
     };
     const response = await fetch(url, authOpts);

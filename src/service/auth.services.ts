@@ -7,6 +7,7 @@ export const fetchJson = async (url: string, options: RequestInit) => {
   const response = await fetch(url, options);
   const json = await response.json();
 
+  console.log(response,json)
   return {
     response,
     json,
@@ -17,6 +18,7 @@ export async function loginService(data: Credentials) {
   const { url, options } = httpReqBuilder.buildPost('auth/login', data);
   const response = await fetch(url, options);
   const json = await response.json();
+  console.log(response, json)
   if (!response.ok) {
     throw new Error(json.messageError || 'Erro no login');
   }

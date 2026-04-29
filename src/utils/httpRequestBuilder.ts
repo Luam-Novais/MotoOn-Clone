@@ -1,4 +1,5 @@
-import { RideRequestParams } from "../types/ride";
+
+import { RideRequestParams } from '../types/ride';
 
 export class HttpRequestBuilder {
   private baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -6,6 +7,9 @@ export class HttpRequestBuilder {
     const url = this.baseUrl + pathname;
     const options = {
       method: 'GET',
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+      },
     };
     return { url, options };
   }
@@ -14,6 +18,7 @@ export class HttpRequestBuilder {
     const options = {
       method: 'POST',
       headers: {
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -26,6 +31,7 @@ export class HttpRequestBuilder {
       const options = {
         method: 'GET',
         headers: {
+          'ngrok-skip-browser-warning': 'true',
           authorization: `Bearer ${token}`,
         },
       };
@@ -38,6 +44,7 @@ export class HttpRequestBuilder {
       const options = {
         method: 'GET',
         headers: {
+          'ngrok-skip-browser-warning': 'true',
           authorization: `Bearer ${token}`,
         },
       };
@@ -50,6 +57,7 @@ export class HttpRequestBuilder {
         headers: {
           authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
         },
         body: JSON.stringify(data),
       };
@@ -61,6 +69,7 @@ export class HttpRequestBuilder {
         method: 'PUT',
         headers: {
           authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
@@ -72,6 +81,7 @@ export class HttpRequestBuilder {
       const options = {
         method: 'DELETE',
         headers: {
+          'ngrok-skip-browser-warning': 'true',
           authorization: `Bearer ${token}`,
         },
       };
@@ -86,6 +96,7 @@ export class HttpRequestBuilder {
         method: 'PUT',
         headers: {
           authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
@@ -98,6 +109,7 @@ export class HttpRequestBuilder {
         method: 'PUT',
         headers: {
           authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),

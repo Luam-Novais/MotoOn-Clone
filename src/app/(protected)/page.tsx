@@ -16,6 +16,7 @@ export default function AuthLayout({ children, className }: { children: React.Re
        method: 'GET',
        headers: {
          authorization: `Bearer ${token}`,
+         'ngrok-skip-browser-warning': 'true',
        },
      } as RequestInit);
      if (!response.ok) {
