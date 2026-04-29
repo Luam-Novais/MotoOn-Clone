@@ -15,9 +15,9 @@ export function Button({ children, loadingState, type, className, disabled, onCl
     </button>
   );
 }
-export function ButtonFilter({ children, loadingState, type, className, disabled, onClick }: ButtonProps) {
+export function ButtonFilter({ children, loadingState, type, className, onClick }: ButtonProps) {
   return (
-    <button type={type} onClick={onClick} className="px-8 py-3 border border-black bg-container shadow-xl flex items-center justify-center whitespace-nowrap rounded-xl text-sm">
+    <button type={type} onClick={onClick} className={`transition-all duration-150 ease-in-out flex items-center justify-center px-4 py-3 rounded-xl uppercase text-sm min-w-40 ${className}`}>
       {children} {loadingState ? <SpinnerWithButton /> : ''}
     </button>
   );

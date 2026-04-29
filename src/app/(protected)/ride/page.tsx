@@ -1,6 +1,7 @@
 'use client';
 import { useRides } from '@/src/hooks/useRides';
-import { History, Clock, ChevronsRight, AlertCircle, ClipboardList, ListTodo, ClipboardCheck } from 'lucide-react';
+import { History, ChevronsRight} from 'lucide-react';
+import Link from 'next/link';
 import { Spinner } from '@/src/components/spinner';
 import { PendingViewRidesCard, CardViewPendingRidesEmpty } from '@/src/components/card.rides';
 
@@ -25,9 +26,9 @@ export default function Page() {
             <p className="capitalize text-sm text-[#ccc]">visualize suas corridas passadas.</p>
           </span>
         </div>
-        <button className="flex self-end font-semibold gap-2 bg-dark w-fit p-4 text-amber-500 rounded-xl shadow-md shadow-black/40 ">
+        <Link href={'/ride/history-rides'} className="flex self-end font-semibold gap-2 bg-dark w-fit p-4 text-amber-500 rounded-xl shadow-md shadow-black/40 ">
           VER HISTÓRICO <ChevronsRight />
-        </button>
+        </Link>
       </div>
     </section>
   );

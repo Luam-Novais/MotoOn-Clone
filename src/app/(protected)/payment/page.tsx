@@ -13,26 +13,24 @@ import Link from 'next/link';
 import { DeletePaymentModal } from '@/src/components/modals';
 import { InputRadio } from '@/src/components/input';
 import { useForm } from 'react-hook-form';
+import { ButtonFilter } from '@/src/components/button';
 
 interface GetHistoryPayment {
   history_payments: string;
 }
 export default function Page() {
   const accessToken = useGetToken();
-  const { register, watch } = useForm<GetHistoryPayment>();
-  const [filterPayments, setFilterPayments] = useState<string | null>('today-payments');
+  const [filterPayments, setFilterPayments] = useState<string>('today-payments');
 
   const [modal, setModal] = useState<{ type: 'edit' | 'delete'; data: Payment } | null>(null);
   const todayRevenue = useRevenue(accessToken as string, 'today-revenue');
   const monthRevenue = useRevenue(accessToken as string, 'month-revenue');
   const payments = usePayments(accessToken as string, filterPayments ?? 'today-payments');
 
-  useEffect(() => {
-    setFilterPayments(watch('history_payments'));
-    return () => {
-      setFilterPayments(null);
-    };
-  }, [watch('history_payments')]);
+  function handleChangeFilterPayments(value: string) {
+    setFilterPayments(value);
+    console.log(filterPayments);
+  }
   return (
     <section className="flex flex-col gap-8 p-4 relative min-h-screen">
       {modal?.type === 'delete' && <DeletePaymentModal token={accessToken as string} data={modal.data} onClose={() => setModal(null)} />}
@@ -65,15 +63,22 @@ export default function Page() {
         </section>
         <section className="flex flex-col gap-6">
           <span>
-            <h2 className="text-base uppercase font-bold italic text-[#eee]">Últimos Pagamentos</h2>
+            <h2 className="text-xl uppercase font-bold text-[#eee]">Últimos Pagamentos</h2>
             <p className="flex items-center gap-2">
               <ListFilter size={12} /> Filtro por data
             </p>
           </span>
-          <form action="" className="flex justify-between  overflow-x-scroll overflow-y-hidden gap-4">
-            <InputRadio label={'hoje'} register={register('history_payments')} value="today-payments" />
-            <InputRadio label={'mês atual'} register={register('history_payments')} value="current-month-payments" />
-            <InputRadio label={'ultimos 3 meses'} register={register('history_payments')} value="last-three-months" />
+
+          <form action="" className="flex justify-between overflow-x-scroll overflow-y-hidden gap-4 bg-container py-2 px-4 rounded-xl shadow-md shadow-black/50">
+            <ButtonFilter onClick={() => handleChangeFilterPayments('today-payments')} type="button" className={filterPayments === 'today-payments' ? '  bg-amber-500/20 text-amber-500  ' : 'bg-zinc-950'}>
+              Hoje
+            </ButtonFilter>
+            <ButtonFilter onClick={() => handleChangeFilterPayments('current-month')} type="button" className={filterPayments === 'current-month' ? ' bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
+              mês atual
+            </ButtonFilter>
+            <ButtonFilter onClick={() => handleChangeFilterPayments('last-three-months')} type="button" className={filterPayments === 'last-three-months' ? 'bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
+              últimos 3 meses
+            </ButtonFilter>
           </form>
           <div className="p-4 flex flex-col gap-5 bg-container rounded-md shadow-md shadow-black/50 ">
             {payments.data?.length === 0 && (
