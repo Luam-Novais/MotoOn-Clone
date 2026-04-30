@@ -171,7 +171,7 @@ export function InputRadio({ label, icon: Icon, register, value}: InputRadioProp
         {Icon && <Icon size={18} />}
         {label}
       </label>
-      <input value={value} type="radio" {...register} className="absolute opacity-0 w-full h-full" />
+      <input value={value} type="radio" {...register} className="absolute inset-0 opacity-0 min-w-full min-h-full w-full h-full" />
     </span>
   );
 }
