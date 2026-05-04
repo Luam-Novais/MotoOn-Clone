@@ -16,7 +16,7 @@ export default function Page() {
             <h1 className="uppercase text-xl font-bold italic">Agendar nova corrida</h1>
             <p className="text-sm">Inicie um novo serviço agora.</p>
           </div>
-          <CalendarPlus className="top-5 right-5" size={120} color="#4A2C00" />
+          <CalendarPlus className="top-5 right-5 opacity-20" size={120} color="#4A2C00" />
         </Link>
 
         <Link className="relative flex flex-col gap-4 bg-dark p-4 min-h-32 rounded-xl  shadow-md shadow-black/50 border-l-4 border-amber-500 " href={'/ride/view-rides'}>
@@ -29,7 +29,7 @@ export default function Page() {
               Acessar Historico <ArrowRight />
             </p>
           </div>
-          <ScrollText className="absolute right-3 bottom-0" size={80} color="#222" />
+          <ScrollText className="absolute right-3 bottom-0 opacity-20" size={80}  />
         </Link>
       </div>
     </section>

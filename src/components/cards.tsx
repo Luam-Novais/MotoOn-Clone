@@ -15,7 +15,7 @@ export function HighlightCard({ children, icon: Icon }: HighlightCardProps) {
   return (
     <div className="p-4 relative flex flex-col justify-between gap-x-2 bg-linear-to-b from-amber-300 to-amber-600  min-h-40 rounded-xl  shadow-md shadow-black/50">
       {children}
-      {Icon && <Icon className=" absolute opacity-25 top-5 right-5" size={120} color="#4A2C00" />}
+      {Icon && <Icon className=" absolute opacity-20 top-5 right-5" size={50} color="#4A2C00" />}
     </div>
   );
 }
