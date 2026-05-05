@@ -3,10 +3,16 @@ import { Title } from '@/src/components/title';
 import { ArrowLeft, ListFilter } from 'lucide-react';
 import Link from 'next/link';
 import { ButtonFilter } from '@/src/components/button';
+import { useRides } from '@/src/hooks/useRides';
+import { RideCard } from '@/src/components/card.rides';
+import { useState } from 'react';
+import { Spinner } from '@/src/components/spinner';
 
 export default function Page() {
+  const [filter, setFilter] = useState<string>('all-rides');
+  const rides = useRides('all-rides');
   return (
-    <section className="grid gap-4 p-4">
+    <section className="grid gap-4 p-4 mb-40">
       <span className="flex gap-2 items-center">
         <Link href={'/ride'}>
           <ArrowLeft />
@@ -31,7 +37,17 @@ export default function Page() {
             últimos 3 meses
           </ButtonFilter>
         </form>
-        <div className="bg-container p-4 rounded-xl"></div>
+        <div className="bg-container p-4 rounded-xl">
+          {rides.isLoading ? (
+            <Spinner />
+          ) : (
+            <ul className="grid gap-4">
+              {rides.data?.map((r) => {
+                return <RideCard ride={r} key={r.id} />;
+              })}
+            </ul>
+          )}
+        </div>
       </div>
     </section>
   );

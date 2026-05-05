@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon, Calendar } from 'lucide-react';
+import { CalendarDays,  Hash,  MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { Ride, RideWithClient } from '../types/ride';
 import { formatDate, formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
@@ -321,6 +321,75 @@ export function PendingRideCard({ ride, onClick }: { ride: RideWithClient; onCli
           <Pencil size={15} />
           Editar
         </button>
+      </div>
+    </div>
+  );
+}
+
+
+
+type RideStatus = 'PENDENTE' | 'CONFIRMADA' | 'CONCLUIDA' | 'CANCELADA';
+
+const statusConfig: Record<RideStatus, { label: string; className: string }> = {
+  PENDENTE: {
+    label: 'Pendente',
+    className: 'bg-yellow-500/10 text-yellow-500',
+  },
+  CONFIRMADA: {
+    label: 'Confirmada',
+    className: 'bg-blue-500/10 text-blue-500',
+  },
+  CONCLUIDA: {
+    label: 'Concluída',
+    className: 'bg-green-500/10 text-green-500',
+  },
+  CANCELADA: {
+    label: 'Cancelada',
+    className: 'bg-red-500/10 text-red-500',
+  },
+};
+
+type RideCardProps = {
+  ride: RideWithClient;
+  onClick?: () => void;
+};
+export function RideCard({ ride, onClick }: RideCardProps) {
+  const status = statusConfig[ride.status as RideStatus]
+
+  return (
+    <div onClick={onClick} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:bg-zinc-800/60 transition-colors cursor-pointer">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <span className={`text-xs px-2 py-1 rounded-md font-medium ${status.className}`}>{status.label}</span>
+
+        <span className="text-sm font-semibold text-white">R$ {ride.value.toFixed(2)}</span>
+      </div>
+      <div className="flex items-center gap-2 text-sm text-zinc-300 mb-3">
+        <MapPin size={16} className="text-zinc-500" />
+        <span className="truncate max-w-32.5">{ride.origin}</span>
+
+        <ArrowRight size={14} className="text-zinc-500" />
+
+        <span className="truncate max-w-32.5">{ride.destination}</span>
+      </div>
+
+      {/* Meta */}
+      <div className="flex items-center justify-between text-xs text-zinc-500 mb-3">
+        <div className="flex items-center gap-1">
+          <CalendarDays size={14} />
+          {new Date(ride.date_ride).toLocaleDateString('pt-BR')}
+        </div>
+
+        <div className="flex items-center gap-1">
+          {ride.number_ride}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="flex items-center gap-1">
+          <User size={14} />
+          {ride.client.name}
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,6 @@ export default function AuthLayout({ children, className }: { children: React.Re
      }
      setIsCheck(false);
    } catch (error) {
-    alert('Ocorreu um erro em nosso servidor.')
     router.push('/login');
     return;
    }
