@@ -1,4 +1,5 @@
 import { Credentials } from '../types/auth';
+import { apiFetch } from '../utils/apiFetch';
 import { HttpRequestBuilder } from '../utils/httpRequestBuilder';
 
 const httpReqBuilder = new HttpRequestBuilder();
@@ -15,12 +16,12 @@ export const fetchJson = async (url: string, options: RequestInit) => {
 };
 
 export async function loginService(data: Credentials) {
-  const { url, options } = httpReqBuilder.buildPost('auth/login', data);
-  const response = await fetch(url, options);
-  const json = await response.json();
-  console.log(response, json)
-  if (!response.ok) {
-    throw new Error(json.messageError || 'Erro no login');
-  }
-  return json;
+ try {
+   const { url, options } = httpReqBuilder.buildPost('auth/login', data);
+   const response = await apiFetch(url, options);
+   const json = await response.json();
+   return json;
+ } catch (error) {
+  throw error
+ }
 }

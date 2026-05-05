@@ -52,7 +52,7 @@ export function CardShedule({ shedule, register }: { shedule: SheduleDTO; regist
     ${shedule.isAvailable ? 'has-[input:checked]:border-amber-500 has-[input:checked]:text-amber-500 bg-container ' : 'bg-[#191919] text-[#777] backdrop-opacity-80'}`}
     >
       <label className="has-[input:checked]:text-amber-500" htmlFor={shedule.slot.toString()}>
-        {shedule.formatedShedule}
+        {shedule.formatedShedule}h
       </label>
       <input type="radio" value={shedule.formatedShedule} {...register} id={shedule.slot.toString()} disabled={!shedule.isAvailable} className="absolute inset-0 min-w-full min-h-full opacity-0" />
     </li>

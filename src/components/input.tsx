@@ -119,7 +119,7 @@ export function RideSheduleSelector({ allShedules, register }: RideSheduleSelect
   const [periodState, setPeriodState] = useState<'morning' | 'after'>('morning');
   return (
     <div className="flex flex-col gap-3">
-      <h1 className="uppercase text-2 sm">Horário da corrida</h1>
+      <h1 className="uppercase text-2 sm">Período da corrida</h1>
       <div className="flex flex-col gap-2 h-full">
         <span className="bg-dark p-2 rounded-xl flex justify-between gap-2 mb-4">
           <button
@@ -151,11 +151,14 @@ interface ContainerShedulesProps {
 }
 export function ContainerShedules({ shedules, register }: ContainerShedulesProps) {
   return (
-    <ul className={`bg-dark px-2 py-8 rounded-xl w-full flex flex-wrap justify-center  items-center gap-6 `}>
-      {shedules.map((s) => {
-        return <CardShedule key={s.slot} shedule={s} register={register} />;
-      })}
-    </ul>
+    <div className='grid gap-2'>
+      <h1>Horário da sua corrida.</h1>
+      <ul className={`bg-dark px-2 py-8 rounded-xl w-full flex flex-wrap justify-center  items-center gap-6 `}>
+        {shedules.map((s) => {
+          return <CardShedule key={s.slot} shedule={s} register={register} />;
+        })}
+      </ul>
+    </div>
   );
 }
 interface InputRadioProps {

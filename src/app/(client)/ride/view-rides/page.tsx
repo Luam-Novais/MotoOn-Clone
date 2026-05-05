@@ -10,6 +10,7 @@ import { Spinner } from '@/src/components/spinner';
 import { useQuery } from '@tanstack/react-query';
 import { useGetClientToken } from '@/src/hooks/useGetClientToken';
 import { getClientRidesService } from '@/src/service/ride.services';
+import { error } from 'console';
 
 export default function Page() {
   const tokenClient = useGetClientToken();
@@ -19,6 +20,18 @@ export default function Page() {
     queryFn: () => getClientRidesService(tokenClient as string),
     enabled: !!tokenClient,
   });
+  if (ridesClient.error) {
+    return (
+      <div className="p-4 grid gap-4">
+        <h1 className="text-xl">Ocorre um erro inesperado, estamos trabalhando nisso.</h1>
+        {ridesClient.error.message}
+        <Link href="/" className="flex items-center justify-center gap-2 border border-zinc-700 hover:bg-zinc-900 transition-colors rounded-lg py-3 text-zinc-300">
+          <ArrowLeft size={18} />
+          Voltar ao início
+        </Link>
+      </div>
+    );
+  }
   return (
     <section className="relative">
       <Button type="button" className="self-end z-50 rounded-full! fixed bottom-2 right-2">

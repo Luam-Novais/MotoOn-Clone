@@ -14,14 +14,17 @@ import { isValideDate } from '@/src/utils/validateDate';
 import { Spinner } from '@/src/components/spinner';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const createRideMutation = useMutation({
     mutationFn: (data: CreateRideDTO) => createRide(data),
     mutationKey: ['rides'],
     onSuccess: (data) => {
       localStorage.setItem('client_token', data.client_token);
+      router.push('/ride/success-ride');
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['rides'] });
       reset();
@@ -31,6 +34,7 @@ export default function Page() {
     },
   });
   const [error, setError] = useState<string | null>(null);
+  const [errorGetTime, setErrorGetTime] = useState<string | null>(null);
   const [countFormPage, setCountFormPage] = useState<1 | 2>(1);
   const {
     control,
@@ -47,13 +51,15 @@ export default function Page() {
   const [slots, setSlots] = useState<SheduleDTO[] | null>(null);
 
   useEffect(() => {
+    setErrorGetTime(null);
+    setSlots(null);
     if (date) {
       async function slots() {
-        const { response, json } = await getSlots(date);
-        if (response.ok) {
+        try {
+          const { json } = await getSlots(date);
           setSlots(json.allSlots);
-        } else {
-          setError(json.messageError);
+        } catch (error) {
+          setErrorGetTime('Ocorreu um erro ao buscar os horários disponíveis, tente novamente.');
         }
       }
       slots();
@@ -125,6 +131,7 @@ export default function Page() {
                     validate: (value) => isValideDate(value),
                   })}
                 />
+                {errorGetTime && <p className="text-red-500">{errorGetTime}</p>}
                 {slots && (
                   <RideSheduleSelector
                     allShedules={slots}

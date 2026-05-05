@@ -21,7 +21,7 @@ export default function Page() {
   } = useForm<Credentials>();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data:Credentials) => loginService(data),
+    mutationFn: (data: Credentials) => loginService(data),
     mutationKey: ['auth'],
     onSuccess: (data) => {
       setErrorResponse(null);
@@ -30,7 +30,11 @@ export default function Page() {
     },
     onError: (data) => {
       setErrorResponse(data.message);
+
       toast.error(data.message);
+      if (data instanceof TypeError) {
+        setErrorResponse('Ocorreu um erro inesperado em nosso servidor, estamos trabalhando nisso.');
+      }
     },
   });
 
@@ -67,7 +71,7 @@ export default function Page() {
               })}
             />
           </div>
-          <Button type="submit" loadingState={isPending} className="uppercase" disabled={isPending}>
+          <Button type="submit" loadingState={isPending} className="uppercase" disabled={isPending || errorResponse !== null}>
             Entrar
             <ChevronsRight />
           </Button>
