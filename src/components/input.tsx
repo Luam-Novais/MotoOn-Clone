@@ -169,7 +169,7 @@ interface InputRadioProps {
 }
 export function InputRadio({ label, icon: Icon, register, value}: InputRadioProps) {
   return (
-    <span className="relative bg-container has-[input:focus]:bg-[#f59e0b33]! has-[input:focus]:text-amber-500 flex p-4 rounded-xl">
+    <span className="relative bg-container has-[input:checked]:bg-[#f59e0b33]! has-[input:focus]:text-amber-500 flex p-4 rounded-xl">
       <label htmlFor="" className="flex items-center gap-2">
         {Icon && <Icon size={18} />}
         {label}

@@ -25,11 +25,10 @@ export default function Page() {
   const [modal, setModal] = useState<{ type: 'edit' | 'delete'; data: Payment } | null>(null);
   const todayRevenue = useRevenue(accessToken as string, 'today-revenue');
   const monthRevenue = useRevenue(accessToken as string, 'month-revenue');
-  const payments = usePayments(accessToken as string, filterPayments ?? 'today-payments');
+  const payments = usePayments(accessToken as string, filterPayments);
 
   function handleChangeFilterPayments(value: string) {
     setFilterPayments(value);
-    console.log(filterPayments);
   }
   return (
     <section className="flex flex-col gap-8 p-4 relative min-h-screen">
@@ -73,7 +72,7 @@ export default function Page() {
             <ButtonFilter onClick={() => handleChangeFilterPayments('today-payments')} type="button" className={filterPayments === 'today-payments' ? '  bg-amber-500/20 text-amber-500  ' : 'bg-zinc-950'}>
               Hoje
             </ButtonFilter>
-            <ButtonFilter onClick={() => handleChangeFilterPayments('current-month')} type="button" className={filterPayments === 'current-month' ? ' bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
+            <ButtonFilter onClick={() => handleChangeFilterPayments('current-month-payments')} type="button" className={filterPayments === 'current-month-payments' ? ' bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
               mês atual
             </ButtonFilter>
             <ButtonFilter onClick={() => handleChangeFilterPayments('last-three-months')} type="button" className={filterPayments === 'last-three-months' ? 'bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>

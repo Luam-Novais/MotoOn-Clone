@@ -10,11 +10,12 @@ import { createPayment } from '@/src/service/payment.services';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGetToken } from '@/src/hooks/useGetToken';
 import { toast } from 'react-toastify';
-
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const token = useGetToken();
   const queryClient = useQueryClient();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -25,12 +26,13 @@ export default function Page() {
     mutationFn: (data: CreatePaymentDTO) => createPayment(data, token as string),
     mutationKey: ['payment'],
     onSuccess: (data) => {
+      router.push('/payment/success-payment');
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['payment'] });
-      reset()
+      reset();
     },
     onError: (data) => {
-      toast.success(data.message);
+      toast.error(data.message);
     },
   });
   const onSubmit: SubmitHandler<CreatePaymentDTO> = async (data) => {
