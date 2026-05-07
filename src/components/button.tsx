@@ -15,10 +15,47 @@ export function Button({ children, loadingState, type, className, disabled, onCl
     </button>
   );
 }
-export function ButtonFilter({ children, loadingState, type, className, onClick }: ButtonProps) {
+interface ButtonProps {
+  children: React.ReactNode;
+  loadingState?: boolean;
+  type: 'button' | 'submit' | 'reset' | undefined;
+  onClick?: () => void;
+  active?: boolean;
+}
+
+export function ButtonFilter({ children, loadingState, type = 'button', onClick, active }: ButtonProps) {
   return (
-    <button type={type} onClick={onClick} className={`transition-all duration-150 ease-in-out flex items-center justify-center px-4 py-3 rounded-xl uppercase text-sm min-w-40 ${className}`}>
-      {children} {loadingState ? <SpinnerWithButton /> : ''}
+    <button
+      type={type}
+      onClick={onClick}
+      className={`
+        group flex min-w-fit items-center justify-center gap-2
+        rounded-xl border px-5 py-3
+        text-sm font-medium uppercase tracking-wide
+        whitespace-nowrap transition-all duration-200
+
+        ${
+          active
+            ? `
+              border-amber-500/30
+              bg-amber-500/15
+              text-amber-400
+              shadow-md shadow-amber-500/10
+            `
+            : `
+              border-zinc-800
+              bg-zinc-950/80
+              text-zinc-400
+              hover:border-zinc-700
+              hover:bg-zinc-900
+              hover:text-zinc-200
+            `
+        }
+      `}
+    >
+      {children}
+
+      {loadingState && <SpinnerWithButton />}
     </button>
   );
 }

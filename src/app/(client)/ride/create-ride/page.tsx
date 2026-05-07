@@ -69,6 +69,7 @@ export default function Page() {
     setValue('destination', '');
   }, [origin]);
   const onSubimit: SubmitHandler<CreateRideDTO> = async (data) => {
+
     if (data.client_name && data.client_phone && data.date_ride && data.origin && data.destination && data.address && data.start_ride) {
       createRideMutation.mutate(data);
     } else {
