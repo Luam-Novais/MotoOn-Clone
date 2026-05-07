@@ -11,8 +11,7 @@ import { useEffect, useState } from 'react';
 import { Spinner } from '@/src/components/spinner';
 import Link from 'next/link';
 import { DeletePaymentModal } from '@/src/components/modals';
-import { InputRadio } from '@/src/components/input';
-import { useForm } from 'react-hook-form';
+import { FILTERS } from '../../../data/filters';
 import { ButtonFilter } from '@/src/components/button';
 
 interface GetHistoryPayment {
@@ -20,16 +19,13 @@ interface GetHistoryPayment {
 }
 export default function Page() {
   const accessToken = useGetToken();
-  const [filterPayments, setFilterPayments] = useState<string>('today-payments');
+  const [filter, setFilter] = useState<string>('today');
 
   const [modal, setModal] = useState<{ type: 'edit' | 'delete'; data: Payment } | null>(null);
   const todayRevenue = useRevenue(accessToken as string, 'today-revenue');
   const monthRevenue = useRevenue(accessToken as string, 'month-revenue');
-  const payments = usePayments(accessToken as string, filterPayments);
+  const payments = usePayments(accessToken as string, filter);
 
-  function handleChangeFilterPayments(value: string) {
-    setFilterPayments(value);
-  }
   return (
     <section className="flex flex-col gap-8 p-4 relative min-h-screen">
       {modal?.type === 'delete' && <DeletePaymentModal token={accessToken as string} data={modal.data} onClose={() => setModal(null)} />}
@@ -61,24 +57,33 @@ export default function Page() {
           </div>
         </section>
         <section className="flex flex-col gap-6">
-          <span>
-            <h2 className="text-xl uppercase font-bold text-[#eee]">Últimos Pagamentos</h2>
-            <p className="flex items-center gap-2">
-              <ListFilter size={12} /> Filtro por data
-            </p>
-          </span>
+            <div className="grid gap-1">
+                  <h2 className="text-lg font-bold text-zinc-100 uppercase tracking-wide">Últimos Pagamentos</h2>
+                  <p className="flex items-center gap-2 text-sm text-zinc-400">
+                    <ListFilter size={14} />
+                    Filtre seus pagamentos rapidamente
+                  </p>
+                </div>
+          <div
+            className="
+                      flex gap-3 overflow-x-auto
+                      rounded-2xl border border-zinc-800
+                      bg-zinc-900/60 backdrop-blur-sm
+                      p-3 shadow-lg shadow-black/20
+                    "
+          >
+            {FILTERS.map((item) => {
+              const isActive = filter === item.value;
+              const Icon = item.icon;
 
-          <form action="" className="flex justify-between overflow-x-scroll overflow-y-hidden gap-4 bg-container py-2 px-4 rounded-xl shadow-md shadow-black/50">
-            <ButtonFilter onClick={() => handleChangeFilterPayments('today-payments')} type="button" className={filterPayments === 'today-payments' ? '  bg-amber-500/20 text-amber-500  ' : 'bg-zinc-950'}>
-              Hoje
-            </ButtonFilter>
-            <ButtonFilter onClick={() => handleChangeFilterPayments('current-month-payments')} type="button" className={filterPayments === 'current-month-payments' ? ' bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
-              mês atual
-            </ButtonFilter>
-            <ButtonFilter onClick={() => handleChangeFilterPayments('last-three-months')} type="button" className={filterPayments === 'last-three-months' ? 'bg-amber-500/20 text-amber-500' : 'bg-zinc-950'}>
-              últimos 3 meses
-            </ButtonFilter>
-          </form>
+              return (
+                <ButtonFilter key={item.value} type="button" onClick={() => setFilter(item.value)} active={isActive}>
+                  <Icon size={16} />
+                  {item.label}
+                </ButtonFilter>
+              );
+            })}
+          </div>
           <div className="p-4 flex flex-col gap-5 bg-container rounded-md shadow-md shadow-black/50 ">
             {payments.data?.length === 0 && (
               <span className="flex flex-col gap-2 justify-between">

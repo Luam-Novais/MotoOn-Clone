@@ -1,16 +1,16 @@
 import { ListFilter, CalendarDays, Clock3, CalendarRange } from 'lucide-react';
 
-type FilterType = 'all-rides' | 'today-rides' | 'current-month' | 'last-three-months';
+type FilterType = 'all' | 'today' | 'current-month' | 'last-three-months';
 
-export const FILTERS_RIDES = [
+export const FILTERS = [
   {
     label: 'Todas',
-    value: 'all-rides',
+    value: 'all',
     icon: ListFilter,
   },
   {
     label: 'Hoje',
-    value: 'today-rides',
+    value: 'today',
     icon: Clock3,
   },
   {
@@ -24,4 +24,3 @@ export const FILTERS_RIDES = [
     icon: CalendarRange,
   },
 ] as const;
-

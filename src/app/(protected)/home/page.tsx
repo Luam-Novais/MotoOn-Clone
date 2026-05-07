@@ -14,8 +14,8 @@ import { RideWithClient } from '@/src/types/ride';
 
 export default function Page() {
   const token = useGetToken();
-  const todayRides = useRides('today-rides');
-  const pendingRides = useRides('pending-rides');
+  const todayRides = useRides('today-confirmed');
+  const pendingRides = useRides('pending');
   const [modalState, setModalState] = useState<boolean>(false);
   const [id_ride, setId_ride] = useState<number | null>(null);
   const totalPendingRides = pendingRides.data?.length ?? 0;

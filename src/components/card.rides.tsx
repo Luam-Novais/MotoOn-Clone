@@ -1,9 +1,31 @@
-import { CalendarDays, Hash, MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon, Calendar } from 'lucide-react';
+import { CalendarDays, Hash, MapPin, Navigation, Clock10, CheckCheck, Phone, User, Pencil, ClipboardList, ClipboardCheck, AlertCircle, Wallet, ArrowRight, Clock3, WalletIcon, Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Ride, RideWithClient } from '../types/ride';
 import { formatDate, formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
 import { ContainerCard } from './cards';
 import { Button } from './button';
+import { stat } from 'node:fs/promises';
+
+type RideStatus = 'PENDENTE' | 'CONFIRMADA' | 'CONCLUIDA' | 'CANCELADA';
+
+const statusConfig: Record<RideStatus, { label: string; className: string }> = {
+  PENDENTE: {
+    label: 'Pendente',
+    className: 'bg-yellow-500/10 text-yellow-500',
+  },
+  CONFIRMADA: {
+    label: 'Confirmada',
+    className: 'bg-blue-500/10 text-blue-500',
+  },
+  CONCLUIDA: {
+    label: 'Concluída',
+    className: 'bg-green-500/10 text-green-500',
+  },
+  CANCELADA: {
+    label: 'Cancelada',
+    className: 'bg-red-500/10 text-red-500',
+  },
+};
 
 function RideHeader({ ride, muted }: { ride: RideWithClient; muted?: boolean }) {
   return (
@@ -112,12 +134,7 @@ export function CardRide({ ride, index }: CardRidesTodayProps) {
 }
 
 export function CardClientViewRide({ ride, index }: { ride: Ride; index: number }) {
-  const statusRideStyle: Record<string, string> = {
-    PENDENTE: 'amber-500',
-    CONFIRMADA: 'green-500 ',
-    CONCLUIDA: 'green-500 ',
-    CANCELADA: 'red-500',
-  };
+  const status = statusConfig[ride.status as RideStatus];
   return (
     <div className={`bg-container rounded-xl shadow-md shadow-black/50 flex flex-col gap-2`}>
       <div className="flex flex-col gap-8 p-4">
@@ -142,7 +159,7 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
           </span>
           <span className="flex flex-col gap-1.5">
             <p className="text-xs text-zinc-400">status atual</p>
-            <p className={`text-xs text-${statusRideStyle[ride.status]} border border-${statusRideStyle[ride.status]} rounded-xl p-2`}>{ride.status}</p>
+            <p className={`text-xs ${status.className} rounded-xl p-2`}>{ride.status}</p>
           </span>
         </div>
         <div className="flex flex-col gap-4 bg-dark p-4 rounded-xl">
@@ -326,32 +343,11 @@ export function PendingRideCard({ ride, onClick }: { ride: RideWithClient; onCli
   );
 }
 
-type RideStatus = 'PENDENTE' | 'CONFIRMADA' | 'CONCLUIDA' | 'CANCELADA';
-
-const statusConfig: Record<RideStatus, { label: string; className: string }> = {
-  PENDENTE: {
-    label: 'Pendente',
-    className: 'bg-yellow-500/10 text-yellow-500',
-  },
-  CONFIRMADA: {
-    label: 'Confirmada',
-    className: 'bg-blue-500/10 text-blue-500',
-  },
-  CONCLUIDA: {
-    label: 'Concluída',
-    className: 'bg-green-500/10 text-green-500',
-  },
-  CANCELADA: {
-    label: 'Cancelada',
-    className: 'bg-red-500/10 text-red-500',
-  },
-};
-
 type RideCardProps = {
   ride: RideWithClient;
   onClick?: () => void;
 };
-export function RideCard({ ride, onClick }: RideCardProps) {
+export function RideHistoryCard({ ride, onClick }: RideCardProps) {
   const status = statusConfig[ride.status as RideStatus];
 
   return (
@@ -361,9 +357,16 @@ export function RideCard({ ride, onClick }: RideCardProps) {
         <span className="text-sm font-semibold text-white">R$ {ride.value.toFixed(2)}</span>
       </div>
       <div className="flex items-center justify-between text-xs text-zinc-400 mb-3">
-        <div className="flex items-center gap-1">
-          <CalendarDays size={14} />
-          {new Date(ride.date_ride).toLocaleDateString('pt-BR')}
+        <div className="flex items-center gap-4">
+          <p className="flex gap-1">
+            <CalendarDays size={14} />
+            {new Date(ride.date_ride).toLocaleDateString('pt-BR')}
+          </p>
+          <p className="flex gap-1">
+            <Clock size={14} />
+
+            {minutesToHoursFormated(ride.start_ride)}
+          </p>
         </div>
 
         <div className="flex items-center gap-1">{ride.number_ride}</div>
