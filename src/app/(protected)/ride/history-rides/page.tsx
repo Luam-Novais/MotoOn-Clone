@@ -51,7 +51,7 @@ export default function Page() {
           );
         })}
       </div>
-      <div className="bg-container p-4 rounded-xl">
+      <div className="bg-container p-4 rounded-xl flex flex-col items-center">
         <ul className="grid gap-4">
           {rides.isLoading && <Spinner />}
           {rides.data?.map((r) => {

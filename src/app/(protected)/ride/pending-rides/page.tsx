@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 export default function Page() {
   const token = useGetToken();
-  const pendingRides = useRides('pending-rides');
+  const pendingRides = useRides('pending');
   const [modal, setModal] = useState<{ type: 'update' | 'delete'; token: string; data: RideWithClient } | null>(null);
   const totalPendingRides = pendingRides.data?.length;
   const estimatedValue = pendingRides.data?.reduce((acc: number, r) => acc + r.value, 0);

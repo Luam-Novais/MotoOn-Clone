@@ -1,7 +1,4 @@
 import { ListFilter, CalendarDays, Clock3, CalendarRange } from 'lucide-react';
-
-type FilterType = 'all' | 'today' | 'current-month' | 'last-three-months';
-
 export const FILTERS = [
   {
     label: 'Todas',

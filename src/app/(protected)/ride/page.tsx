@@ -6,7 +6,7 @@ import { Spinner } from '@/src/components/spinner';
 import { PendingViewRidesCard, CardViewPendingRidesEmpty } from '@/src/components/card.rides';
 
 export default function Page() {
-  const pendingRides = useRides('pending-rides');
+  const pendingRides = useRides('pending');
   const totalPendingRides = pendingRides.data?.length ?? 0;
   const estimatedValue = pendingRides.data?.reduce((acc: number, r) => acc + r.value, 0);
   return (
