@@ -15,8 +15,8 @@ import { deletePayment } from '../service/payment.services';
 
 export function ContainerModal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm">
-      <div className="animate-appear-down absolute bottom-0 left-0 right-0 rounded-t-3xl border-t border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
+    <div className="fixed inset-0 z-50 min-h-full bg-black/70 backdrop-blur-sm">
+      <div className="animate-appear-down h-[80%] absolute bottom-0 left-0 right-0 rounded-t-3xl border-t border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
         <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-zinc-700" />
         {children}
         <button onClick={onClose} className="w-full py-3 text-sm text-zinc-500 transition hover:text-zinc-300">
@@ -103,7 +103,7 @@ export function DeletePaymentModal({ data, onClose, token }: PaymentModalProps) 
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => deletePayment(data.id, token),
-    mutationKey: ['payment', 'today-payment', 'month-payment'],
+    mutationKey: ['payment', 'today', 'current-month', 'last-three-months'],
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['payment'] });
@@ -121,7 +121,7 @@ export function DeletePaymentModal({ data, onClose, token }: PaymentModalProps) 
     <ContainerModal onClose={onClose}>
       <div className="flex w-full flex-col gap-8">
         <HeaderModal icon={TriangleAlert} colorIcon="#ef4444" desc="Essa ação não poderá ser desfeita." handleClose={onClose} />
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <button onClick={handleDelete} className="text-red-950 font-bold bg-linear-0 from-red-800 to-red-500 p-4 rounded-xl">
             Excluir
           </button>
@@ -146,10 +146,10 @@ export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRi
 
   const updateMutate = useMutation({
     mutationFn: (status: string) => updateStatusService({ id: data.id, token, data: { newStatus: status } }),
-    mutationKey: ['rides', 'pending-rides'],
+    mutationKey: ['rides', 'pending'],
     onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ['rides', 'pending-rides'] });
+      queryClient.invalidateQueries({ queryKey: ['rides', 'pending'] });
     },
     onError: (data) => toast.error(data.message),
   });
@@ -203,7 +203,7 @@ export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRi
       </div>
 
       {/* ações */}
-      <div className="mt-5 space-y-3">
+      <div className="mt-5 space-y-3 grid gap-3">
         <button onClick={() => handleUpdateStatus('CONFIRMADA')} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-4 font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.99]">
           <CheckCircle2 size={20} />
           Aceitar corrida

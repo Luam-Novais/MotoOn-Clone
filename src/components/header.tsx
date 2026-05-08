@@ -24,8 +24,8 @@ const navItems = [
 
 export function Header({ href }: { href: string }) {
   return (
-    <header className="fixed bottom-5 left-1/2 z-50 w-[92%] max-w-md -translate-x-1/2">
-      <nav className="flex items-center gap-2 justify-between rounded-2xl border border-zinc-700 bg-zinc-950 px-2 py-2 shadow-2xl transition-all duration-200 ease-in-out">
+    <header className="fixed bottom-0 left-1/2 z-50 w-full min-w-full -translate-x-1/2">
+      <nav className="flex items-center gap-2 justify-between rounded-l-xl rounded-r-xl border border-zinc-700 bg-zinc-950 px-2 py-2 shadow-2xl transition-all duration-200 ease-in-out">
         {navItems.map((item) => {
           const isActive = href === item.id;
           const Icon = item.icon;
