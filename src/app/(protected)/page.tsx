@@ -31,8 +31,19 @@ export default function AuthLayout({ children, className }: { children: React.Re
     return;
    }
   }
-  async function registerSW(){
-     await navigator.serviceWorker.register('/sw.js');
+  async function registerSW() {
+    if (!('serviceWorker' in navigator)) {
+      console.log('SW não suportado');
+      return;
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+
+      console.log('SW registrado', registration);
+    } catch (error) {
+      console.error('Erro ao registrar SW', error);
+    }
   }
   useEffect(() => {
     const tokenLocal = localStorage.getItem('access_token');
