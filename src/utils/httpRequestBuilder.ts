@@ -1,5 +1,5 @@
-
 import { RideRequestParams } from '../types/ride';
+
 
 export class HttpRequestBuilder {
   private baseUrl = process.env.NEXT_PUBLIC_BASE_URL;

@@ -1,0 +1,11 @@
+self.addEventListener('install', () => {
+  console.log('instalou porraaaaa!!!');
+});
+self.addEventListener('push', (event) => {
+  const data = event.data.json()
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+    }),
+  );
+});

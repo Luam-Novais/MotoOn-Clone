@@ -1,3 +1,5 @@
+'use client';
+import { BellDot } from 'lucide-react';
 import { SpinnerWithButton } from './spinner';
 
 interface ButtonProps {
@@ -57,5 +59,18 @@ export function ButtonFilter({ children, loadingState, type = 'button', onClick,
 
       {loadingState && <SpinnerWithButton />}
     </button>
+  );
+}
+export function ButtonEnableNotification({onOpen}: {onOpen: ()=> void}){
+  return (
+    <div className="flex p-4">
+      <button className="flex relative items-center gap-2 text-xl" onClick={onOpen}>
+        Ativar as Notificações <BellDot size={20} />
+        <span className="absolute top-0 left-0 flex size-2 -z-10">
+          <span className="absolute inline-flex h-full  w-full  animate-ping rounded-full bg-amber-500 opacity-100"></span>
+          <span className="inline-flex size-2 rounded-full bg-amber-500"></span>
+        </span>
+      </button>
+    </div>
   );
 }

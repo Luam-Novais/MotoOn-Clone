@@ -1,7 +1,7 @@
-import { formatToCurrency, minutesToHoursFormated, normalizeTextLabel } from '../utils/functionsFormat';
-import { CircleCheckBig, CircleDollarSign, Banknote, CreditCard, X, LucideIcon, TriangleAlert, CheckCircle2, XCircle, User, MapPin, Clock3, Calendar } from 'lucide-react';
+import { formatToCurrency, minutesToHoursFormated, normalizeTextLabel, urlBase64ToUint8Array } from '../utils/functionsFormat';
+import { CircleCheckBig, CircleDollarSign, Banknote, CreditCard, X, LucideIcon, BellDot, TriangleAlert, CheckCircle2, XCircle, User, MapPin, Clock3, Calendar } from 'lucide-react';
 import { InputRadio, Input } from './input';
-import { Button, ButtonFilter } from './button';
+import { Button, ButtonEnableNotification, ButtonFilter } from './button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { HttpRequestBuilder } from '../utils/httpRequestBuilder';
@@ -12,6 +12,9 @@ import { Spinner } from './spinner';
 import { RideWithClient } from '../types/ride';
 import { finishRideService, updateStatusService } from '../service/ride.services';
 import { deletePayment } from '../service/payment.services';
+import { only } from 'node:test';
+import { useNotificationStore } from '../store/useNotificationStore';
+import { sendPushSubcription } from '../service/notification.services';
 
 export function ContainerModal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
@@ -54,7 +57,6 @@ interface FinishRideModalProps {
 interface FinishRideDTO {
   paymentMethod: string;
 }
-const httpReqBuilder = new HttpRequestBuilder();
 export function FinishRideModal({ token, setModalState, id_ride }: FinishRideModalProps) {
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm<FinishRideDTO>();
@@ -212,6 +214,57 @@ export function UpdatePendingRideModal({ data, token, onClose }: UpdatePendingRi
         <button onClick={() => handleUpdateStatus('CANCELADA')} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 font-semibold text-red-400 transition hover:bg-red-500/15 active:scale-[0.99]">
           <XCircle size={20} />
           Recusar corrida
+        </button>
+      </div>
+    </ContainerModal>
+  );
+}
+
+interface EnableNotificationsPromptProps {
+  showModal: boolean;
+  handleOpen: () => void;
+  handleClose: () => void;
+}
+export function EnableNotificationsPrompt({ showModal, handleClose, handleOpen }: EnableNotificationsPromptProps) {
+  return (
+    <div>
+      {showModal ? (
+        <NotificationPermissionModal onClose={handleClose} />
+      ) : (
+       <ButtonEnableNotification onOpen={handleOpen}/>
+      )}
+    </div>
+  );
+}
+
+const {buildPost} = new  HttpRequestBuilder()
+export function NotificationPermissionModal({onClose}: {onClose: ()=> void}) {
+  const {setPermission} = useNotificationStore()
+  async function handlePermission(){
+    const vapidKey = urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
+    const registration = await navigator.serviceWorker.ready
+    const permission = await Notification.requestPermission()
+    if(permission !== 'granted'){
+      alert('Ative as notificações para melhor experiência.')
+    }
+    setPermission(permission)
+    let subscription = await registration.pushManager.getSubscription()
+    if(!subscription){
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidKey
+      })
+    }
+    await sendPushSubcription(subscription)
+  }
+  return (
+    <ContainerModal onClose={onClose}>
+      <div className="grid gap-4 justify-center mb-9 mt-4">
+        <h1 className="text-2xl">Para uma melhor experiência no sistema, ative as notificações.</h1>
+        <p className="text-[#ccc]">As notificações servirão, para te alertar quando uma nova solicitação de corrida for feita.</p>
+        <button className="flex items-center justify-center mt-8 border border-zinc-950 uppercase bg-zinc-100 text-zinc-950 font-bold p-4 gap-2 rounded-xl" onClick={handlePermission}>
+          Ativar notificações
+          <BellDot size={22} strokeWidth={2.3} />
         </button>
       </div>
     </ContainerModal>

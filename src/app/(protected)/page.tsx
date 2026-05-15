@@ -2,13 +2,14 @@ import { Spinner } from '@/src/components/spinner';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { HttpRequestBuilder } from '../../utils/httpRequestBuilder';
+import { useNotificationStore } from '@/src/store/useNotificationStore';
 
 const httpReqBuilder = new HttpRequestBuilder();
 
 export default function AuthLayout({ children, className }: { children: React.ReactNode; className: string }) {
   const [isCheck, setIsCheck] = useState<boolean>(true);
   const router = useRouter();
-
+  
   async function fetchMe(token: string) {
    try {
      const { url } = httpReqBuilder.buildGet('auth/me');
@@ -29,6 +30,9 @@ export default function AuthLayout({ children, className }: { children: React.Re
     return;
    }
   }
+  async function registerSW(){
+     await navigator.serviceWorker.register('/sw.js');
+  }
   useEffect(() => {
     const tokenLocal = localStorage.getItem('access_token');
     if (!tokenLocal) {
@@ -37,7 +41,14 @@ export default function AuthLayout({ children, className }: { children: React.Re
     }
     fetchMe(tokenLocal);
   }, []);
-
+  useEffect(()=>{
+    registerSW()
+    useNotificationStore.getState().setPermission(Notification.permission)
+  }, [])
   if (isCheck) return <Spinner />;
-  return <main>{children}</main>;
+  return (
+    <main>
+      {children}
+    </main>
+  )
 }

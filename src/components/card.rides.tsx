@@ -121,7 +121,7 @@ export function CardRide({ ride, index }: CardRidesTodayProps) {
         <div className="flex justify-between">
           <p className={`lowercase text-xs text-${statusRideStyle[ride.status]}`}>{ride.status}</p>
           <span className="text-xs">
-            <p className="text-zinc-400">{formatDate(ride.date_ride)}</p>
+            <p className="text-zinc-400">{formatDate(ride.date_ride.toString())}</p>
             <p>{ride.number_ride}</p>
           </span>
         </div>
@@ -154,7 +154,7 @@ export function CardClientViewRide({ ride, index }: { ride: Ride; index: number 
                 <Calendar size={14} />
                 data
               </span>
-              <h2 className="text-xl font-bold ">{formatDate(ride.date_ride)}</h2>
+              <h2 className="text-xl font-bold ">{formatDate(ride.date_ride.toString())}</h2>
             </span>
           </span>
           <span className="flex flex-col gap-1.5">
@@ -287,7 +287,7 @@ export function PendingRideCard({ ride, onClick }: { ride: RideWithClient; onCli
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-zinc-200 text-base">
             <CalendarDays size={14} />
-            <span>{formatDate(ride.date_ride)}</span>
+            <span>{formatDate(ride.date_ride.toString())}</span>
           </div>
 
           <div className="flex items-center gap-2 text-zinc-200 text-xl">
@@ -360,7 +360,7 @@ export function RideHistoryCard({ ride, onClick }: RideCardProps) {
         <div className="flex items-center gap-4">
           <p className="flex gap-1">
             <CalendarDays size={14} />
-            {new Date(ride.date_ride).toLocaleDateString('pt-BR')}
+            {new Date(ride.date_ride.toString()).toLocaleDateString('pt-BR')}
           </p>
           <p className="flex gap-1">
             <Clock size={14} />

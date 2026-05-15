@@ -22,10 +22,10 @@ export function useRides(filter: string) {
 
     return await response.json();
   }
-  const ridesToday = useQuery({
+  const rides = useQuery({
     queryKey: ['rides', filter],
     queryFn: getRides,
     enabled: !!token,
   });
-  return ridesToday;
+  return rides;
 }
