@@ -1,3 +1,4 @@
+'use client'
 import { Spinner } from '@/src/components/spinner';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

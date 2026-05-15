@@ -71,7 +71,7 @@ export default function Page() {
               })}
             />
           </div>
-          <Button type="submit" loadingState={isPending} className="uppercase" disabled={isPending || errorResponse !== null}>
+          <Button type="submit" loadingState={isPending} className="uppercase" disabled={isPending}>
             Entrar
             <ChevronsRight />
           </Button>
