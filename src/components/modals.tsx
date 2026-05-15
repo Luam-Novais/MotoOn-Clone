@@ -226,36 +226,44 @@ interface EnableNotificationsPromptProps {
   handleClose: () => void;
 }
 export function EnableNotificationsPrompt({ showModal, handleClose, handleOpen }: EnableNotificationsPromptProps) {
-  return (
-    <div>
-      {showModal ? (
-        <NotificationPermissionModal onClose={handleClose} />
-      ) : (
-       <ButtonEnableNotification onOpen={handleOpen}/>
-      )}
-    </div>
-  );
+  return <div>{showModal ? <NotificationPermissionModal onClose={handleClose} /> : <ButtonEnableNotification onOpen={handleOpen} />}</div>;
 }
 
-const {buildPost} = new  HttpRequestBuilder()
-export function NotificationPermissionModal({onClose}: {onClose: ()=> void}) {
-  const {setPermission} = useNotificationStore()
-  async function handlePermission(){
-    const vapidKey = urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
-    const registration = await navigator.serviceWorker.ready
-    const permission = await Notification.requestPermission()
-    if(permission !== 'granted'){
-      alert('Ative as notificações para melhor experiência.')
+export function NotificationPermissionModal({ onClose }: { onClose: () => void }) {
+  const { setPermission } = useNotificationStore();
+  async function handlePermission() {
+    try {
+      console.log('1');
+      const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (!publicKey) throw new Error('Chave publica não existente.');
+      console.log('2');
+
+      const vapidKey = urlBase64ToUint8Array(publicKey);
+      const registration = await navigator.serviceWorker.ready;
+      if (!registration) throw new Error('registration do sw não criada.');
+      console.log('3', registration);
+
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Ative as notificações para melhor experiência.');
+        return;
+      }
+      console.log('4', permission);
+      setPermission(permission);
+      let subscription = await registration.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: vapidKey,
+        });
+      }
+      console.log('5', subscription);
+      const response = await sendPushSubcription(subscription);
+      console.log(await response.json());
+      console.log('6 ______ tudo certo>>>>');
+    } catch (error) {
+      console.error(error);
     }
-    setPermission(permission)
-    let subscription = await registration.pushManager.getSubscription()
-    if(!subscription){
-      subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: vapidKey
-      })
-    }
-    await sendPushSubcription(subscription)
   }
   return (
     <ContainerModal onClose={onClose}>
