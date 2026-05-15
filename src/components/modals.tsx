@@ -239,11 +239,14 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
       console.log('2');
 
       const vapidKey = urlBase64ToUint8Array(publicKey);
-      const registration = await navigator.serviceWorker.ready;
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        return;
+      }
+      const registration = await navigator.serviceWorker.getRegistration('/sw.js');
       if (!registration) throw new Error('registration do sw não criada.');
       console.log('3', registration);
 
-      const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
         alert('Ative as notificações para melhor experiência.');
         return;

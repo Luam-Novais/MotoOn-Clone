@@ -15,8 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider className="mb-40 relative">
       <PushProvider>
-        <EnableNotificationsPrompt showModal={showModalNotification} handleClose={() => setShowModalNotification(false)} handleOpen={() => setShowModalNotification(true)} />
-        {/* {permission !== 'granted' && <EnableNotificationsPrompt showModal={showModalNotification} handleClose={() => setShowModalNotification(false)} handleOpen={() => setShowModalNotification(true)} />} */}
+        {permission !== 'granted' && <EnableNotificationsPrompt showModal={showModalNotification} handleClose={() => setShowModalNotification(false)} handleOpen={() => setShowModalNotification(true)} />}
         <ToastContainer position="top-right" autoClose={3000} theme="dark" />
         {children}
         <Header href={pathname} />
