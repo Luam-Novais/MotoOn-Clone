@@ -26,7 +26,7 @@ export default function Page() {
     onSuccess: (data) => {
       setErrorResponse(null);
       localStorage.setItem('access_token', data.accessToken);
-      router.push('/home');
+      router.replace('/home');
     },
     onError: (data) => {
       setErrorResponse(data.message);
