@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 export function useGetToken() {
-  const [token, setToken] = useState<string | null>();
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
   useEffect(() => {
     if (typeof window !== 'undefined') {

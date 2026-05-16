@@ -11,30 +11,37 @@ export default function AuthLayout({ children, className }: { children: React.Re
   const [isCheck, setIsCheck] = useState<boolean>(true);
   const router = useRouter();
 
-  async function fetchMe(token: string) {
-    try {
-      const { url } = httpReqBuilder.buildGet('auth/me');
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          authorization: `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true',
-        },
-      } as RequestInit);
-      if (!response.ok) {
-        router.replace('/login');
-        return;
-      }
-      setIsCheck(false);
-    } catch (error) {
+async function fetchMe(token: string) {
+  try {
+    const { url } = httpReqBuilder.buildGet('auth/me');
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+        'ngrok-skip-browser-warning': 'true',
+      },
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
       router.replace('/login');
       return;
     }
+
+    if (!response.ok) {
+      throw new Error('Erro ao validar sessão');
+    }
+
+    setIsCheck(false);
+  } catch (error) {
+    console.error(error);
+    setIsCheck(false);
   }
+}
   useEffect(() => {
     const tokenLocal = localStorage.getItem('access_token');
     if (!tokenLocal) {
-      router.replace('login');
+      router.replace('/login');
       return;
     }
     fetchMe(tokenLocal);

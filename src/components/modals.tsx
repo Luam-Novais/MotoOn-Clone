@@ -233,25 +233,22 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
   const { setPermission } = useNotificationStore();
   async function handlePermission() {
     try {
-      console.log('1');
+      alert('hello word')
       const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
       if (!publicKey) throw new Error('Chave publica não existente.');
-      console.log('2');
-
       const vapidKey = urlBase64ToUint8Array(publicKey);
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
         return;
       }
       const registration = await navigator.serviceWorker.getRegistration('/sw.js');
-      if (!registration) throw new Error('registration do sw não criada.');
-      console.log('3', registration);
-
       if (permission !== 'granted') {
         alert('Ative as notificações para melhor experiência.');
         return;
       }
-      console.log('4', permission);
+      if (!registration) throw new Error('registration do sw não criada.');
+      console.log('3', registration);
+
       setPermission(permission);
       let subscription = await registration.pushManager.getSubscription();
       if (!subscription) {
@@ -260,10 +257,8 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
           applicationServerKey: vapidKey,
         });
       }
-      console.log('5', subscription);
-      const response = await sendPushSubcription(subscription);
-      console.log(await response.json());
-      console.log('6 ______ tudo certo>>>>');
+      await sendPushSubcription(subscription);
+
     } catch (error) {
       console.error(error);
     }
