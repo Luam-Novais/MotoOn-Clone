@@ -233,7 +233,6 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
   const { setPermission } = useNotificationStore();
   async function handlePermission() {
     try {
-      alert('hello word')
       const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
       if (!publicKey) throw new Error('Chave publica não existente.');
       const vapidKey = urlBase64ToUint8Array(publicKey);
@@ -258,7 +257,6 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
         });
       }
       await sendPushSubcription(subscription);
-
     } catch (error) {
       console.error(error);
     }
