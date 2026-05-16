@@ -6,9 +6,6 @@ export function useGetToken() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('access_token'));
-    } else {
-      router.push('/login');
-      return;
     }
   }, []);
 

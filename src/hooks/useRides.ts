@@ -23,9 +23,9 @@ export function useRides(filter: string) {
     return await response.json();
   }
   const rides = useQuery({
-    queryKey: ['rides', filter],
+    queryKey: ['rides', filter, token],
     queryFn: getRides,
-    enabled: !!token,
+    enabled: Boolean(token),
   });
   return rides;
 }
