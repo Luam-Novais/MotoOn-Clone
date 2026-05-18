@@ -8,6 +8,6 @@ export function useGetToken() {
       setToken(localStorage.getItem('access_token'));
     }
   }, []);
-
+  
   return token;
 }

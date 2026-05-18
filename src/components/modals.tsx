@@ -246,7 +246,6 @@ export function NotificationPermissionModal({ onClose }: { onClose: () => void }
         return;
       }
       if (!registration) throw new Error('registration do sw não criada.');
-      console.log('3', registration);
 
       setPermission(permission);
       let subscription = await registration.pushManager.getSubscription();
